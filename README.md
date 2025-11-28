@@ -1,0 +1,886 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HORECA Editor Pro</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+
+    <style>
+        body { background-color: #f3f4f6; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; height: 100vh; overflow: hidden; }
+        
+        /* Layout */
+        .app-container { display: flex; height: 100vh; }
+        
+        /* Controls (Left) */
+        .controls { width: 380px; background: white; padding: 20px; overflow-y: auto; border-right: 1px solid #e5e7eb; display: flex; flex-direction: column; gap: 15px; box-shadow: 4px 0 15px rgba(0,0,0,0.05); z-index: 20; }
+        .section-title { font-size: 0.95rem; font-weight: 700; color: #1e3a8a; border-bottom: 2px solid #eff6ff; padding-bottom: 5px; margin-top: 10px; margin-bottom: 5px; text-transform: uppercase; letter-spacing: 0.5px; }
+        
+        /* Preview (Right) */
+        .preview-area { flex-grow: 1; padding: 40px; overflow-y: auto; display: flex; justify-content: center; background: #64748b; }
+        
+        /* The Paper Container */
+        #pages-container { display: flex; flex-direction: column; gap: 30px; align-items: center; }
+
+        /* The Paper */
+        .a4-page {
+            background: white;
+            width: 210mm;
+            min-height: 297mm; /* Standard A4 Height */
+            height: 297mm;
+            padding: 10mm 15mm;
+            box-shadow: 0 0 25px rgba(0,0,0,0.25);
+            position: relative;
+            font-family: 'Arial', sans-serif;
+            color: #333;
+            font-size: 10pt;
+            box-sizing: border-box;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* MODAL STYLES */
+        .modal-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.6); z-index: 50;
+            display: none; justify-content: center; align-items: center;
+        }
+        .modal-overlay.open { display: flex; animation: fadeIn 0.2s; }
+        .modal-content {
+            background: white; width: 90%; max-width: 1000px; max-height: 90vh;
+            border-radius: 12px; padding: 25px; box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+            display: flex; flex-direction: column;
+        }
+        .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; border-bottom: 1px solid #eee; padding-bottom: 10px; }
+        .close-btn { font-size: 24px; cursor: pointer; color: #666; font-weight: bold; }
+        
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+        /* TOAST NOTIFICATION */
+        .toast {
+            visibility: hidden;
+            min-width: 250px;
+            background-color: #333;
+            color: #fff;
+            text-align: center;
+            border-radius: 8px;
+            padding: 16px;
+            position: fixed;
+            z-index: 100;
+            left: 50%;
+            bottom: 30px;
+            transform: translateX(-50%);
+            font-size: 14px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+        .toast.show {
+            visibility: visible;
+            animation: fadein 0.5s, fadeout 0.5s 2.5s;
+        }
+        @keyframes fadein { from {bottom: 0; opacity: 0;} to {bottom: 30px; opacity: 1;} }
+        @keyframes fadeout { from {bottom: 30px; opacity: 1;} to {bottom: 0; opacity: 0;} }
+
+        /* HEADER DESIGN */
+        .header-top { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 20px; }
+        .logo-area { width: 45%; }
+        .logo-img { max-width: 180px; max-height: 80px; object-fit: contain; display: block; margin-bottom: 10px; }
+        .vendor-details { font-size: 9pt; line-height: 1.4; color: #444; }
+        .vendor-name { font-weight: bold; font-size: 14pt; color: #1e40af; text-transform: uppercase; margin-bottom: 5px; }
+
+        .client-box { 
+            width: 45%; 
+            border: 1px solid #94a3b8; 
+            border-radius: 4px;
+            padding: 15px; 
+            background-color: #f8fafc;
+            min-height: 130px;
+        }
+        .client-label { font-size: 8pt; color: #64748b; text-transform: uppercase; font-weight: bold; margin-bottom: 5px; }
+        
+        /* DOC TITLE */
+        .doc-title-row { text-align: center; margin-bottom: 15px; }
+        .doc-title { font-size: 22pt; font-weight: 800; color: #1e3a8a; text-transform: uppercase; letter-spacing: 2px; border-bottom: 3px solid #1e3a8a; display: inline-block; padding-bottom: 5px; }
+
+        /* INFO BAR */
+        .info-bar { 
+            display: flex; width: 100%; border: 1px solid #cbd5e1; 
+            margin-bottom: 20px; border-radius: 4px; overflow: hidden; 
+        }
+        .info-cell { flex: 1; border-right: 1px solid #cbd5e1; text-align: center; }
+        .info-cell:last-child { border-right: none; }
+        .info-header { background-color: #e2e8f0; font-size: 8pt; font-weight: bold; padding: 6px; color: #475569; text-transform: uppercase; }
+        .info-value { padding: 8px; font-weight: 600; font-size: 10pt; color: #0f172a; background: white; }
+
+        /* MAIN TABLE */
+        .main-table { width: 100%; border-collapse: collapse; margin-bottom: auto; }
+        .main-table th { 
+            background-color: #1e40af; color: white; padding: 8px 5px; 
+            font-size: 9pt; text-transform: uppercase; border: 1px solid #1e40af; 
+        }
+        .main-table td { 
+            border: 1px solid #e2e8f0; padding: 6px 5px; 
+            text-align: center; font-size: 9pt; color: #334155;
+        }
+        .col-art { text-align: left !important; padding-left: 10px !important; font-weight: 600; }
+        .row-stripe:nth-child(even) { background-color: #f8fafc; }
+
+        /* FOOTER TOTALS */
+        .footer-area { margin-top: 20px; display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 40px; }
+        .amount-text { width: 60%; padding-right: 20px; }
+        .amount-words { font-style: italic; font-weight: 600; color: #334155; margin-top: 5px; font-size: 11pt; }
+        
+        .total-box { width: 35%; border: 2px solid #1e40af; border-radius: 4px; overflow: hidden; }
+        .total-row { display: flex; justify-content: space-between; padding: 8px 12px; border-bottom: 1px solid #e2e8f0; }
+        .total-row.final { background-color: #1e40af; color: white; border-bottom: none; }
+        .total-label { font-weight: bold; }
+
+        /* BOTTOM INFO */
+        .bottom-info { 
+            border-top: 1px solid #cbd5e1; padding-top: 10px; 
+            font-size: 8pt; color: #64748b; 
+            display: flex; justify-content: space-between; 
+            margin-top: auto;
+        }
+        
+        /* CONTROLS & GRID */
+        input, select, textarea { 
+            width: 100%; 
+            padding: 12px; 
+            border: 1px solid #d1d5db; 
+            border-radius: 6px; 
+            font-size: 0.95rem; 
+            margin-bottom: 8px; 
+            background-color: white;
+            transition: border-color 0.2s;
+        }
+
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            border-color: #2563eb;
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+        }
+        
+        /* TABS (In Modal) */
+        .tabs { display: flex; gap: 8px; border-bottom: 1px solid #e5e7eb; padding-bottom: 10px; margin-bottom: 15px; overflow-x: auto; flex-wrap: wrap; }
+        .tab { padding: 8px 16px; background: #f1f5f9; border-radius: 20px; cursor: pointer; font-size: 0.9rem; font-weight: 600; color: #64748b; white-space: nowrap; transition: 0.2s; border: 1px solid #e2e8f0; }
+        .tab:hover { background: #e2e8f0; }
+        .tab.active { background: #1e40af; color: white; border-color: #1e40af; }
+        
+        .prod-grid-view { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 12px; overflow-y: auto; padding: 5px; height: 50vh; align-content: start; }
+        .prod-card-large { 
+            background: white; border: 1px solid #e2e8f0; padding: 12px; border-radius: 8px; 
+            cursor: pointer; display: flex; flex-direction: column; justify-content: space-between;
+            transition: 0.2s; box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+        .prod-card-large:hover { border-color: #3b82f6; transform: translateY(-2px); box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
+
+        .btn-main { background-color: #1e40af; color: white; width: 100%; padding: 12px; border-radius: 8px; font-weight: bold; cursor: pointer; text-align: center; transition: 0.2s; margin-top: auto; }
+        .btn-main:hover { background-color: #1e3a8a; }
+        .btn-outline { border: 2px solid #1e40af; color: #1e40af; padding: 10px; border-radius: 8px; font-weight: bold; text-align: center; cursor: pointer; background: white; transition: 0.2s; }
+        .btn-outline:hover { background: #eff6ff; }
+        .hidden { display: none; }
+        .page-break-text { text-align: center; font-style: italic; color: #888; margin-top: 10px; font-size: 9pt; }
+        
+        @media print {
+            body * { visibility: hidden; }
+            #pages-container, #pages-container * { visibility: visible; }
+            #pages-container { position: absolute; left: 0; top: 0; width: 100%; margin: 0; }
+            .a4-page { margin-bottom: 0; page-break-after: always; box-shadow: none; height: auto; min-height: 297mm; }
+            .a4-page:last-child { page-break-after: auto; }
+            .no-print { display: none !important; }
+        }
+    </style>
+</head>
+<body>
+
+<!-- TOAST -->
+<div id="toast" class="toast">
+    <i class="fa-solid fa-check-circle text-green-400 text-xl"></i>
+    <span id="toast-message">Produit ajouté !</span>
+</div>
+
+<div class="app-container">
+    
+    <!-- LEFT SIDEBAR -->
+    <div class="controls">
+        <div class="flex items-center gap-2 mb-2 text-blue-900">
+            <i class="fa-solid fa-layer-group text-xl"></i>
+            <span class="font-bold text-lg">HORECA Editor</span>
+        </div>
+
+        <!-- 1. DOCUMENT -->
+        <div class="section-title">1. Info Document</div>
+        <select id="docTypeInput" onchange="updateUI()">
+            <option value="Bon de Livraison">Bon de Livraison</option>
+            <option value="Facture">Facture</option>
+        </select>
+        
+        <div class="grid grid-cols-2 gap-2">
+            <input type="date" id="dateInput" onchange="renderInvoice()">
+            <input type="text" id="docNumInput" value="2025/001" oninput="renderInvoice()" placeholder="N° Doc">
+        </div>
+        
+        <input type="text" id="refInput" placeholder="Référence Client (Facultatif)" oninput="renderInvoice()">
+        <input type="text" id="paymentInput" placeholder="Mode de Paiement" class="hidden" oninput="renderInvoice()">
+
+        <!-- 2. CLIENT -->
+        <div class="section-title">2. Client (Sauvegarde Auto)</div>
+        
+        <label class="block text-xs font-bold text-gray-500 mb-1">Nom / Raison Sociale</label>
+        <input type="text" id="clientName" placeholder="Ex: Snack Amine" oninput="renderInvoice()">
+        
+        <label class="block text-xs font-bold text-gray-500 mb-1">Adresse</label>
+        <input type="text" id="clientAddress" placeholder="Ex: 12 Rue des Oliviers, Marrakech" oninput="renderInvoice()">
+        
+        <label class="block text-xs font-bold text-gray-500 mb-1">I.C.E</label>
+        <input type="text" id="clientIce" placeholder="Ex: 00123456789" oninput="renderInvoice()">
+
+        <!-- 3. PRODUCTS ACTION -->
+        <div class="section-title">3. Produits</div>
+        
+        <div onclick="toggleModal(true)" class="btn-outline mb-4">
+            <i class="fa-solid fa-box-open mr-2"></i> Ouvrir le Catalogue
+        </div>
+
+        <label class="block text-xs font-bold text-gray-500 mb-1">Ajout Rapide / Manuel</label>
+        <div class="flex gap-1 mb-1">
+            <input id="mName" placeholder="Nom" class="w-2/3 text-xs">
+            <input id="mPrice" type="number" placeholder="Prix" class="w-1/3 text-xs">
+        </div>
+        <div class="flex gap-1">
+            <input id="mUnit" placeholder="Unité" class="w-1/3 text-xs">
+            <input id="mCondit" placeholder="Condit" class="w-1/3 text-xs">
+            <button onclick="addManual()" class="w-1/3 bg-gray-200 text-gray-700 text-xs font-bold rounded hover:bg-gray-300">+</button>
+        </div>
+
+        <!-- 4. LOGO -->
+        <div class="section-title mt-4">4. Logo</div>
+        <input type="file" id="logoUpload" accept="image/*" class="text-xs" onchange="loadLogo(event)">
+        <div class="text-xs text-gray-400 mt-1">Logo sauvegardé automatiquement.</div>
+
+        <div onclick="generatePDF()" class="btn-main">
+            <i class="fa-solid fa-file-pdf mr-2"></i> Télécharger PDF
+        </div>
+    </div>
+
+    <!-- RIGHT PREVIEW -->
+    <div class="preview-area">
+        <div id="pages-container">
+            <!-- Pages will be injected here by JS -->
+        </div>
+    </div>
+</div>
+
+<!-- POPUP MODAL -->
+<div id="productModal" class="modal-overlay">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h2 class="text-2xl font-bold text-blue-900">📦 Catalogue Produits</h2>
+            <div class="close-btn" onclick="toggleModal(false)">×</div>
+        </div>
+        
+        <!-- Search Bar -->
+        <div class="mb-4">
+            <input type="text" id="searchCatalog" placeholder="🔍 Rechercher un produit..." oninput="searchProducts()" class="w-full p-3 border rounded shadow-sm focus:ring-2 focus:ring-blue-500 outline-none">
+        </div>
+
+        <div class="tabs">
+            <div class="tab active" onclick="setTab('all', this)">Tous</div>
+            <div class="tab" onclick="setTab('boulangerie', this)">🥖 Boulangerie</div>
+            <div class="tab" onclick="setTab('viennoiserie', this)">🥐 Viennoiserie</div>
+            <div class="tab" onclick="setTab('seminaire', this)">🍰 Séminaire</div>
+            <div class="tab" onclick="setTab('patisserie', this)">🥧 Pâtisserie</div>
+            <div class="tab" onclick="setTab('snacking', this)">🥪 Snacking</div>
+            <div class="tab" onclick="setTab('meat', this)">🍗 Volaille</div>
+            <div class="tab" onclick="setTab('fries', this)">🍟 Frites</div>
+            <div class="tab" onclick="setTab('ice', this)">🧊 Glaçons</div>
+        </div>
+
+        <div id="catalogArea" class="prod-grid-view"></div>
+        
+        <div class="mt-4 text-right">
+            <button onclick="toggleModal(false)" class="bg-blue-600 text-white px-6 py-2 rounded font-bold hover:bg-blue-700">Fermer</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    // --- DATA ---
+    const catalog = {
+        boulangerie: [
+            { name: "PAIN DE MIE 1, 6KG", unit: "CARTOON", condit: 5, price: 42.12 },
+            { name: "GD MOULE FERME PAIN DE MIE 1, 2KG", unit: "CARTOON", condit: 6, price: 31.07 },
+            { name: "GD MOULE FERME COMPLET 1, 2KG", unit: "CARTOON", condit: 6, price: 29.91 },
+            { name: "PAIN DE MIE ARTISAN 650 GR NATURE", unit: "CARTOON", condit: 8, price: 18.92 },
+            { name: "DOUBLE BAGUETTE TRADITION NAT GM", unit: "CARTOON", condit: 40, price: 3.68 },
+            { name: "DOUBLE BAGUETTE TRADITION COMPLETE GM", unit: "CARTOON", condit: 40, price: 3.75 },
+            { name: "DOUBLE PAIN COMPLET PM", unit: "CARTOON", condit: 90, price: 1.97 },
+            { name: "DOUBLE PAIN SEMOULE GM", unit: "CARTOON", condit: 40, price: 4.02 },
+            { name: "DOUBLE PAIN COMPLET GM", unit: "CARTOON", condit: 40, price: 3.17 },
+            { name: "DOUBLE PAIN SEMOULE PM", unit: "CARTOON", condit: 90, price: 1.88 },
+            { name: "BAGUETTE TRADITION PAV", unit: "CARTOON", condit: 20, price: 5.74 },
+            { name: "BAGUETTE TRADITION OLV GM", unit: "CARTOON", condit: 20, price: 5.63 },
+            { name: "BAGUETINE 60GR", unit: "CARTOON", condit: 80, price: 1.90 },
+            { name: "FLUTE ANCIENNE 230G", unit: "CARTOON", condit: 25, price: 3.66 },
+            { name: "BAGUETTE TRADITION SES GM", unit: "CARTOON", condit: 20, price: 5.92 },
+            { name: "FLUTE OLIVE PLUS", unit: "CARTOON", condit: 30, price: 5.98 },
+            { name: "PISTOLET OLIVE PLUS", unit: "CARTOON", condit: 120, price: 1.99 },
+            { name: "PISTOLET NAT 50G", unit: "CARTOON", condit: 120, price: 1.23 },
+            { name: "FLUTE SES 230G", unit: "CARTOON", condit: 25, price: 5.99 },
+            { name: "PISTOLET PAV 50G", unit: "CARTOON", condit: 120, price: 2.00 },
+            { name: "PISTOLET SES 50G", unit: "CARTOON", condit: 120, price: 2.14 },
+            { name: "PAIN DE MIE ARTISAN 650 GR COMPLET", unit: "CARTOON", condit: 8, price: 20.53 },
+            { name: "PISTOLET COMPLET 50G", unit: "CARTOON", condit: 120, price: 1.51 },
+            { name: "PAIN SANDWICH VIENNOIS", unit: "CARTOON", condit: 40, price: 4.21 },
+            { name: "PAIN SANDWICH PANINI 110G", unit: "CARTOON", condit: 40, price: 3.06 },
+            { name: "PAIN MAROCAIN SEMOULE", unit: "CARTOON", condit: 120, price: 1.96 },
+            { name: "PAIN MAROCAIN COMPLET", unit: "CARTOON", condit: 120, price: 1.96 },
+            { name: "SOFT PAIN BURGER NOIR", unit: "CARTOON", condit: 60, price: 3.76 },
+            { name: "SOFT MINI PAIN BURGER", unit: "CARTOON", condit: 160, price: 2.05 }, 
+            { name: "SOFT PAIN BURGER XL", unit: "CARTOON", condit: 40, price: 4.43 },
+            { name: "SOFT MINI PAIN BURGER (VAR)", unit: "CARTOON", condit: 160, price: 1.61 }, 
+            { name: "SOFT PAIN BURGER", unit: "CARTOON", condit: 60, price: 3.01 },
+            { name: "DOUBLE PAIN SW TRADITION COMPLET 110G", unit: "CARTOON", condit: 80, price: 2.77 },
+            { name: "DOUBLE PAIN SW TRADITION NAT 110G", unit: "CARTOON", condit: 80, price: 2.22 }
+        ],
+        viennoiserie: [
+            { name: "PAIN CHOC MARG PP", unit: "CARTOON", condit: 60, price: 3.15 },
+            { name: "CROISSANT MARG PP", unit: "CARTOON", condit: 60, price: 2.75 },
+            { name: "ESCARGOT RAISIN MARG PP", unit: "CARTOON", condit: 60, price: 3.15 },
+            { name: "CROISSANT MARG MINI PP", unit: "CARTOON", condit: 160, price: 1.60 },
+            { name: "PAIN CHOC MARG MINI PP", unit: "CARTOON", condit: 160, price: 1.70 },
+            { name: "ESCARGOT RAISIN MARG MINI PP", unit: "CARTOON", condit: 160, price: 1.70 },
+            { name: "MINI PAIN SUISSE SPECIAL PP", unit: "CARTOON", condit: 200, price: 2.64 },
+            { name: "PLAQUE PATE FEUILLETE STD 40*60", unit: "CARTOON", condit: 20, price: 21.21 },
+            { name: "PAIN CHOC BEURRE MINI PRET A CUIRE", unit: "CARTOON", condit: 160, price: 2.73 },
+            { name: "PAIN CHOC BEURRE PRET A CUIRE", unit: "CARTOON", condit: 60, price: 5.57 },
+            { name: "CROISSANT BEURRE PRET A CUIRE", unit: "CARTOON", condit: 60, price: 5.23 },
+            { name: "CROISSANT BEURRE MINI PRET A CUIRE", unit: "CARTOON", condit: 160, price: 2.53 },
+            { name: "DOUBLE PAIN CHOC BEURRE PRET A CUIRE", unit: "CARTOON", condit: 120, price: 5.57 },
+            { name: "ESCARGOT RSN BEURRE MINI PRE-POUSSE", unit: "CARTOON", condit: 160, price: 2.73 }
+        ],
+        seminaire: [
+            { name: "AUMONIERE POULET TANDOORI", unit: "CARTOON", condit: 200, price: 4.05 },
+            { name: "GOUGERE JAMBON DINDE", unit: "CARTOON", condit: 200, price: 3.10 },
+            { name: "FEUILLETE CHAUSSON CREVETTE MINI", unit: "CARTOON", condit: 200, price: 8.64 },
+            { name: "FEUILLETEE SAUCISSE COCKTAIL", unit: "CARTOON", condit: 200, price: 3.27 },
+            { name: "PF MACARON CHOC MINI", unit: "CARTOON", condit: 1, price: 183.89 },
+            { name: "MINI PIZZA JAMB", unit: "CARTOON", condit: 200, price: 3.73 },
+            { name: "MINI CHOUX GAMBAS", unit: "CARTOON", condit: 200, price: 4.26 },
+            { name: "MINI BOURSE FETA EPINARD", unit: "CARTOON", condit: 200, price: 3.04 },
+            { name: "QUICHE LORRAINE MINI", unit: "CARTOON", condit: 200, price: 2.47 },
+            { name: "MINI TIGRE SAUMON", unit: "CARTOON", condit: 200, price: 3.04 },
+            { name: "MINI VOL-AU-VENT CARRE CHAMPIGNONS TRUFFE", unit: "CARTOON", condit: 200, price: 3.92 },
+            { name: "MINI FOND DE TARTE CARRE EVASÉ NEUTRE", unit: "CARTOON", condit: 300, price: 1.46 },
+            { name: "MINI FOND DE TARTE ROND EVASÉ NEUTRE", unit: "CARTOON", condit: 350, price: 1.46 },
+            { name: "PF MACARON CARAMEL SESAME", unit: "CARTOON", condit: 55, price: 4.18 },
+            { name: "PF MACARON CHOCOLAT", unit: "CARTOON", condit: 55, price: 4.18 },
+            { name: "PF MACARON VANILLE", unit: "CARTOON", condit: 55, price: 4.18 },
+            { name: "PF MACARON PISTACHE", unit: "CARTOON", condit: 55, price: 4.18 },
+            { name: "PF MACARON CAFE", unit: "CARTOON", condit: 55, price: 4.18 },
+            { name: "PF MACARON CITRON", unit: "CARTOON", condit: 55, price: 4.18 },
+            { name: "PF TIGRE MINI FINANCIER CHOC", unit: "CARTOON", condit: 4, price: 193.28 },
+            { name: "PF MACARON FRAMBOISE", unit: "CARTOON", condit: 55, price: 4.18 },
+            { name: "FONDANT CHOC MINI", unit: "CARTOON", condit: 80, price: 2.87 },
+            { name: "PF DIAMANT PEPITE", unit: "CARTOON", condit: 5, price: 111.27 },
+            { name: "PF FINANCIER MINI", unit: "CARTOON", condit: 4, price: 167.78 },
+            { name: "TARTE PATE SUCREE PF", unit: "CARTOON", condit: 378, price: 1.67 }
+        ],
+        patisserie: [
+            { name: "CAKE MARBRE", unit: "CARTOON", condit: 6, price: 37.69 },
+            { name: "CAKE NAT", unit: "CARTOON", condit: 6, price: 35.67 },
+            { name: "MUFFIN EXTRA CHOCOLAT", unit: "CARTOON", condit: 20, price: 17.37 },
+            { name: "MUFFIN CITRON", unit: "CARTOON", condit: 20, price: 11.83 },
+            { name: "PF FINANCIER GR", unit: "CARTOON", condit: 120, price: 5.68 },
+            { name: "PF TIGRE FINANCIER CHOC", unit: "CARTOON", condit: 80, price: 7.71 },
+            { name: "MUFFIN FRUIT ROUGE", unit: "CARTOON", condit: 20, price: 17.43 },
+            { name: "MADELEINE IND", unit: "CARTOON", condit: 140, price: 3.01 },
+            { name: "BROWNIE", unit: "CARTOON", condit: 48, price: 13.91 }
+        ],
+        snacking: [
+            { name: "QUICHE LORRAINE IND", unit: "CARTOON", condit: 45, price: 25.38 },
+            { name: "QUICHE SAUMON EPINARD IND", unit: "CARTOON", condit: 45, price: 27.24 },
+            { name: "QUICHE POULET CHAMPIGNON IND", unit: "CARTOON", condit: 45, price: 19.42 }
+        ],
+        meat: [
+            { name: "COQUELET CONGELE", unit: "SAC/P", condit: 1, price: 26.00 },
+            { name: "CUISSE DE POULET CONGELE", unit: "SAC/KG", condit: 1, price: 40.00 },
+            { name: "ESCALOPE DE DINDE CONGELE", unit: "SAC/KG", condit: 1, price: 55.00 },
+            { name: "ESCALOPE PLT NG PANE SURGELE", unit: "SAC/KG", condit: 1, price: 52.00 },
+            { name: "FILET DE PLT/SUPREME CONGELE", unit: "SAC/KG", condit: 1, price: 60.00 },
+            { name: "FILET PLT CONGELE/ESCALOPE", unit: "SAC/KG", condit: 1, price: 60.00 },
+            { name: "JAMBON PLT FUME", unit: "1KG", condit: 1, price: 60.00 },
+            { name: "JAMBON PLT NAT", unit: "1KG", condit: 1, price: 55.00 },
+            { name: "MERGUEZ DE PLT CONGELE", unit: "SAC/KG", condit: 1, price: 43.00 },
+            { name: "MERGUEZ DOUCE DE PLT CONGELE", unit: "SAC/KG", condit: 1, price: 43.00 },
+            { name: "MORTADELLE PLT NAT", unit: "1KG", condit: 1, price: 25.00 },
+            { name: "MORTADELLE PLT OLIVES", unit: "500G", condit: 1, price: 25.00 },
+            { name: "NUGGETS DE PLT CONGELE", unit: "SAC/KG", condit: 1, price: 52.00 },
+            { name: "PILON PLT CONGELE", unit: "SAC/KG", condit: 1, price: 48.00 },
+            { name: "POULET PAC CONGELE", unit: "SAC AAV X1", condit: 1, price: 30.00 },
+            { name: "SAUCISSES PLT/ A GRILLER CONGELE", unit: "SAC/KG", condit: 1, price: 43.00 },
+            { name: "SAUCISSES PLT / AIL & F;H CONGELE", unit: "SAC/KG", condit: 1, price: 43.00 },
+            { name: "WINGS PLT / NAT CONGELE", unit: "SAC/KG", condit: 1, price: 29.00 }
+        ],
+        fries: [
+            { name: "FRITE 7/7", unit: "SAC 2, 5 KG", condit: 1, price: 17.50 }
+        ],
+        ice: [
+            { name: "GLACON 1 KG", unit: "SAC 1 KG", condit: 1, price: 8.00 },
+            { name: "GLACON 2 KG", unit: "SAC 2 KG", condit: 1, price: 8.00 },
+            { name: "GLACON 5 KG", unit: "SAC 5 KG", condit: 1, price: 8.00 }
+        ]
+    };
+
+    let items = [];
+    let currentTab = 'all'; // Default to show all
+    const ITEMS_PER_PAGE = 13; // Pagination limit
+
+    // --- INIT ---
+    window.onload = function() {
+        document.getElementById('dateInput').valueAsDate = new Date();
+        
+        // Restore Client Info
+        if(localStorage.getItem('horeca_cName')) document.getElementById('clientName').value = localStorage.getItem('horeca_cName');
+        if(localStorage.getItem('horeca_cAddr')) document.getElementById('clientAddress').value = localStorage.getItem('horeca_cAddr');
+        if(localStorage.getItem('horeca_cIce')) document.getElementById('clientIce').value = localStorage.getItem('horeca_cIce');
+
+        renderCatalog();
+        updateUI(); 
+    };
+
+    // --- SEARCH LOGIC ---
+    function searchProducts() {
+        const query = document.getElementById('searchCatalog').value.toLowerCase();
+        renderCatalog(query);
+    }
+
+    // --- TAB LOGIC ---
+    function setTab(cat, el) {
+        currentTab = cat;
+        document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+        el.classList.add('active');
+        document.getElementById('searchCatalog').value = ''; // Clear search on tab switch
+        renderCatalog();
+    }
+
+    function renderCatalog(searchQuery = '') {
+        const container = document.getElementById('catalogArea');
+        container.innerHTML = '';
+        
+        let productsToShow = [];
+
+        if (currentTab === 'all') {
+            // Flatten all categories
+            Object.values(catalog).forEach(catList => {
+                productsToShow = productsToShow.concat(catList);
+            });
+        } else {
+            productsToShow = catalog[currentTab] || [];
+        }
+
+        // Apply Search Filter
+        if (searchQuery) {
+            productsToShow = productsToShow.filter(p => p.name.toLowerCase().includes(searchQuery));
+        }
+        
+        productsToShow.forEach((p, index) => {
+            const el = document.createElement('div');
+            el.className = 'prod-card-large';
+            el.innerHTML = `
+                <div>
+                    <div class="font-bold text-gray-800 text-sm">${p.name}</div>
+                    <div class="text-xs text-gray-500 mt-1">
+                        <span class="bg-gray-100 px-2 py-1 rounded">
+                            <i class="fa-solid fa-box"></i> ${p.unit} (x${p.condit})
+                        </span>
+                    </div>
+                </div>
+                <div class="flex justify-between items-end mt-2">
+                    <div class="text-blue-700 font-bold text-lg">${p.price.toFixed(2)} <span class="text-xs font-normal">DH</span></div>
+                    
+                    <div class="flex items-center gap-1">
+                        <input type="number" id="qty-${index}-${currentTab}" value="1" min="1" step="1" 
+                            class="w-12 p-1 text-center border rounded text-sm" onclick="event.stopPropagation()">
+                        <button class="bg-blue-50 text-blue-700 px-3 py-1 rounded text-sm hover:bg-blue-100 font-bold border border-blue-200"
+                            onclick="event.stopPropagation(); addItemFromCard(this, '${index}-${currentTab}')">+ Ajouter</button>
+                    </div>
+                </div>
+            `;
+            // Store product data on button for easy access
+            const btn = el.querySelector('button');
+            btn.productData = p;
+            
+            container.appendChild(el);
+        });
+
+        if (productsToShow.length === 0) {
+            container.innerHTML = `<div class="col-span-3 text-center text-gray-400 py-10">Aucun produit trouvé.</div>`;
+        }
+    }
+
+    // --- TOAST FUNCTION ---
+    function showToast(message) {
+        const toast = document.getElementById("toast");
+        document.getElementById("toast-message").innerText = message;
+        toast.className = "toast show";
+        setTimeout(function(){ toast.className = toast.className.replace("show", ""); }, 3000);
+    }
+
+    function addItemFromCard(btn, idSuffix) {
+        const p = btn.productData;
+        const qtyInput = document.getElementById(`qty-${idSuffix}`);
+        const qty = parseFloat(qtyInput.value) || 1;
+        
+        addItem(p, qty);
+    }
+
+    function addItem(p, qty = 1) {
+        const exists = items.find(i => i.name === p.name);
+        if(exists) exists.qty += qty;
+        else items.push({...p, qty: qty});
+        
+        showToast(`${qty}x ${p.name} ajouté !`);
+        renderInvoice();
+    }
+
+    function addManual() {
+        const name = document.getElementById('mName').value;
+        const price = parseFloat(document.getElementById('mPrice').value);
+        const unit = document.getElementById('mUnit').value || "U";
+        const condit = parseFloat(document.getElementById('mCondit').value) || 1;
+
+        if(name && price) {
+            addItem({name, price, unit, condit});
+            document.getElementById('mName').value = '';
+            document.getElementById('mPrice').value = '';
+        }
+    }
+
+    function updateQty(idx, val) {
+        if(val <= 0) items.splice(idx, 1);
+        else items[idx].qty = parseFloat(val);
+        renderInvoice();
+    }
+
+    function toggleModal(show) {
+        const modal = document.getElementById('productModal');
+        if(show) {
+            modal.classList.add('open');
+            // Reset to 'All' tab when opening to show everything
+            // Optional: Remove if you want to keep state
+            // setTab('all', document.querySelector('.tab')); 
+        }
+        else modal.classList.remove('open');
+    }
+
+    // --- RENDER INVOICE & PAGINATION ---
+    function renderInvoice() {
+        // SAVE INFO
+        localStorage.setItem('horeca_cName', document.getElementById('clientName').value);
+        localStorage.setItem('horeca_cAddr', document.getElementById('clientAddress').value);
+        localStorage.setItem('horeca_cIce', document.getElementById('clientIce').value);
+
+        const container = document.getElementById('pages-container');
+        container.innerHTML = ''; // Clear pages
+
+        // Gather Inputs
+        const inputs = {
+            docType: document.getElementById('docTypeInput').value,
+            date: formatDate(document.getElementById('dateInput').value),
+            docNum: document.getElementById('docNumInput').value,
+            ref: document.getElementById('refInput').value || "-",
+            payment: document.getElementById('paymentInput').value || "-",
+            cName: document.getElementById('clientName').value || "NOM DU CLIENT",
+            // No replacement needed for text input, let CSS handle wrapping
+            cAddr: document.getElementById('clientAddress').value || "Adresse du client...",
+            cIce: document.getElementById('clientIce').value || "-",
+            savedLogo: localStorage.getItem('horeca_logo')
+        };
+
+        // Logic variables
+        let total = 0;
+        let cartonCount = 0;
+        
+        // Calculate Totals first
+        items.forEach(i => {
+            const totU = i.qty * i.condit;
+            const linePrice = totU * i.price;
+            total += linePrice;
+            
+            // IMPROVED LOGIC FOR COUNTING CARTONS
+            // Check if unit is Carton OR if condit > 1 (implies a pack/carton)
+            const unitUpper = i.unit.toUpperCase();
+            if(unitUpper.includes('CARTON') || unitUpper.includes('CARTOON') || (unitUpper === 'CTN') || (unitUpper === 'C/40') || (i.condit > 1 && unitUpper !== 'KG' && unitUpper !== 'L')) {
+                cartonCount += i.qty;
+            }
+            
+            i.lineTotal = linePrice; // Store for rendering
+            i.totU = totU;
+        });
+
+        // Split into Chunks
+        const chunks = [];
+        if(items.length === 0) {
+            chunks.push([]); // Empty page
+        } else {
+            for (let i = 0; i < items.length; i += ITEMS_PER_PAGE) {
+                chunks.push(items.slice(i, i + ITEMS_PER_PAGE));
+            }
+        }
+
+        // Render Pages
+        chunks.forEach((chunk, index) => {
+            const isLast = index === chunks.length - 1;
+            const pageHTML = buildPageHTML(chunk, index, chunks.length, isLast, inputs, total, cartonCount);
+            container.insertAdjacentHTML('beforeend', pageHTML);
+        });
+
+        // Re-attach logo if available (need to update src of img tags that were just created)
+        if(inputs.savedLogo) {
+            document.querySelectorAll('.page-logo').forEach(img => {
+                img.src = inputs.savedLogo;
+                img.classList.remove('hidden');
+            });
+        }
+    }
+
+    function buildPageHTML(chunk, pageIdx, totalPages, isLast, inputs, grandTotal, cartonCount) {
+        let rowsHTML = '';
+        
+        // Render Rows
+        chunk.forEach((item, chunkIdx) => {
+            // We need absolute index to callback updateQty correctly
+            const absIdx = (pageIdx * ITEMS_PER_PAGE) + chunkIdx;
+            
+            rowsHTML += `
+                <tr class="row-stripe">
+                    <td class="col-art">${item.name}</td>
+                    <td>${item.unit}</td>
+                    <td style="padding:0">
+                        <input type="number" class="w-12 text-center bg-transparent font-bold text-blue-700" 
+                        value="${item.qty}" onchange="updateQty(${absIdx}, this.value)">
+                    </td>
+                    <td>${item.condit}</td>
+                    <td>${item.totU}</td>
+                    <td>${item.price.toFixed(2)}</td>
+                    <td class="font-bold">${item.lineTotal.toFixed(2)}</td>
+                    <td class="no-print text-red-500 cursor-pointer" onclick="updateQty(${absIdx}, 0)"><i class="fa-solid fa-trash"></i></td>
+                </tr>
+            `;
+        });
+
+        // Fill empty rows if last page to keep layout
+        if (isLast && chunk.length < ITEMS_PER_PAGE) {
+             for(let i=chunk.length; i < ITEMS_PER_PAGE; i++) {
+                 rowsHTML += `<tr><td style="height:32px"></td><td></td><td></td><td></td><td></td><td></td><td class="no-print"></td></tr>`;
+             }
+        }
+
+        // Footer Logic
+        let footerHTML = '';
+        if (isLast) {
+            const words = numberToFrench(grandTotal);
+            const wordStr = words.charAt(0).toUpperCase() + words.slice(1);
+            
+            footerHTML = `
+                <div class="footer-area">
+                    <div class="amount-text">
+                        <div class="text-sm font-bold text-gray-600 border-b pb-1 mb-1 uppercase">Montant de Facture en lettre:</div>
+                        <div class="amount-words">${wordStr}</div>
+                    </div>
+                    <div class="total-box">
+                        <div class="total-row final">
+                            <span class="total-label">NET À PAYER</span>
+                            <span><span class="text-xl">${grandTotal.toLocaleString('fr-MA', {minimumFractionDigits: 2})}</span> DH</span>
+                        </div>
+                    </div>
+                </div>
+            `;
+        } else {
+            footerHTML = `<div class="page-break-text">... Suite page suivante ...</div>`;
+        }
+
+        // Dynamic Field in Header
+        const dynamicLabel = inputs.docType === 'Facture' ? "Mode Paiement" : "NB UNITÉS";
+        const dynamicVal = inputs.docType === 'Facture' ? inputs.payment : cartonCount;
+
+        return `
+        <div class="a4-page">
+            <!-- HEADER -->
+            <div class="header-top">
+                <div class="logo-area">
+                    <img class="page-logo logo-img hidden" alt="Logo">
+                    <div class="vendor-name text-blue-800 font-bold text-xl mb-1">HORECA SOUTH WAVE SARL</div>
+                    <div class="vendor-details">
+                        AV. ABDELKHALEK<br>
+                        TORRESSE N° 181<br>
+                        RC N°: 30223<br>
+                        I.C.E: 003759201000045
+                    </div>
+                </div>
+                <div class="client-box">
+                    <div class="client-label">Facturer à:</div>
+                    <div class="font-bold text-lg text-blue-900 mb-1">${inputs.cName}</div>
+                    <div class="text-sm text-gray-600 mb-2 whitespace-pre-line" style="word-break: break-word;">${inputs.cAddr}</div>
+                    <div class="text-sm font-bold">ICE: ${inputs.cIce}</div>
+                </div>
+            </div>
+
+            <div class="doc-title-row">
+                <div class="doc-title">${inputs.docType.toUpperCase()}</div>
+                <div class="text-xs text-gray-500 mt-1">Page ${pageIdx + 1} / ${totalPages}</div>
+            </div>
+
+            <div class="info-bar">
+                <div class="info-cell">
+                    <div class="info-header">${inputs.docType === 'Facture' ? "Date Facturation" : "Date Livraison"}</div>
+                    <div class="info-value">${inputs.date}</div>
+                </div>
+                <div class="info-cell">
+                    <div class="info-header">${inputs.docType === 'Facture' ? "N° Facture" : "N° BL"}</div>
+                    <div class="info-value">${inputs.docNum}</div>
+                </div>
+                <div class="info-cell">
+                    <div class="info-header">${dynamicLabel}</div>
+                    <div class="info-value">${dynamicVal}</div>
+                </div>
+                <div class="info-cell">
+                    <div class="info-header">Référence</div>
+                    <div class="info-value">${inputs.ref}</div>
+                </div>
+            </div>
+
+            <table class="main-table">
+                <thead>
+                    <tr>
+                        <th class="col-art">Désignation</th>
+                        <th width="8%">Unité</th>
+                        <th width="8%">Qté</th>
+                        <th width="8%">Condit</th>
+                        <th width="10%">Total U</th>
+                        <th width="12%">P.U (DH)</th>
+                        <th width="15%">Total (DH)</th>
+                        <th width="5%" class="no-print"></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    ${rowsHTML}
+                </tbody>
+            </table>
+
+            ${footerHTML}
+
+            <div class="bottom-info">
+                <div>
+                    <strong class="text-blue-900">HORECA SOUTH WAVE SARL</strong><br>
+                    Distribution agro-alimentaire<br>
+                    Tél: +212 6 61 37 26 24<br>
+                    contact@horecasw.com<br>
+                    www.horecasw.com
+                </div>
+                <div class="text-right" style="font-size: 8.5pt;">
+                    <strong class="text-blue-900">Détails bancaires:</strong><br>
+                    Banque : <strong>AttijariWafa bank</strong><br>
+                    N de compte : 0015185000000702<br>
+                    IBAN : MA64 007 530 0015185000000702 57
+                </div>
+            </div>
+        </div>
+        `;
+    }
+
+    // --- UTILS ---
+    function updateUI() {
+        const type = document.getElementById('docTypeInput').value;
+        const isFacture = type === 'Facture';
+        document.getElementById('paymentInput').classList.toggle('hidden', !isFacture);
+        renderInvoice();
+    }
+
+    function loadLogo(event) {
+        const file = event.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    localStorage.setItem('horeca_logo', e.target.result);
+                    renderInvoice();
+                } catch(e) { console.warn("Logo too big"); }
+            }
+            reader.readAsDataURL(file);
+        }
+    }
+
+    function generatePDF() {
+        const element = document.getElementById('pages-container');
+        const opt = {
+            margin: 0,
+            filename: `${document.getElementById('docTypeInput').value}_${document.getElementById('clientName').value}.pdf`,
+            image: { type: 'jpeg', quality: 0.98 },
+            html2canvas: { scale: 2 },
+            jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+        };
+        document.querySelectorAll('.no-print').forEach(el => el.style.display = 'none');
+        html2pdf().set(opt).from(element).save().then(() => {
+            document.querySelectorAll('.no-print').forEach(el => el.style.display = '');
+        });
+    }
+
+    function formatDate(dateStr) {
+        if(!dateStr) return "-";
+        const d = new Date(dateStr);
+        return d.toLocaleDateString('fr-FR');
+    }
+
+    function numberToFrench(num) {
+        if (num === 0) return "zéro dirhams";
+        const units = ["", "un", "deux", "trois", "quatre", "cinq", "six", "sept", "huit", "neuf"];
+        const teens = ["dix", "onze", "douze", "treize", "quatorze", "quinze", "seize", "dix-sept", "dix-huit", "dix-neuf"];
+        const tens = ["", "dix", "vingt", "trente", "quarante", "cinquante", "soixante", "soixante-dix", "quatre-vingt", "quatre-vingt-dix"];
+        function convertGroup(n) {
+            if (n < 10) return units[n];
+            if (n < 20) return teens[n - 10];
+            if (n < 100) {
+                let ten = Math.floor(n / 10);
+                let unit = n % 10;
+                if (ten === 7 || ten === 9) { ten -= 1; unit += 10; }
+                let str = tens[ten];
+                if (unit === 0) return str;
+                if (unit === 1 && ten !== 8) return str + " et un";
+                if (unit >= 10) return str + "-" + teens[unit - 10];
+                return str + "-" + units[unit];
+            }
+            if (n < 1000) {
+                let hundred = Math.floor(n / 100);
+                let rest = n % 100;
+                let str = (hundred === 1 ? "cent" : units[hundred] + " cent");
+                if (rest === 0) return str;
+                return str + " " + convertGroup(rest);
+            }
+            return "";
+        }
+        let integerPart = Math.floor(num);
+        let decimalPart = Math.round((num - integerPart) * 100);
+        let result = "";
+        if (integerPart >= 1000) {
+            let thousands = Math.floor(integerPart / 1000);
+            integerPart %= 1000;
+            if (thousands === 1) result += "mille ";
+            else result += convertGroup(thousands) + " mille ";
+        }
+        if (integerPart > 0) result += convertGroup(integerPart);
+        else if (result === "") result += "zéro";
+        result += " dirhams";
+        if (decimalPart > 0) result += " et " + convertGroup(decimalPart) + " centimes";
+        return result;
+    }
+</script>
+</body>
+</html>
