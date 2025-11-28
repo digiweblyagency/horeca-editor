@@ -1,3 +1,4 @@
+[HORECA EDITOR.html](https://github.com/user-attachments/files/23827123/HORECA.EDITOR.html)
 <!DOCTYPE html>
 <html lang="fr">
 <head>
