@@ -29,9 +29,8 @@
             background: white;
             width: 210mm;
             min-height: 297mm; /* Standard A4 Height */
-            height: 297mm;
-            /* Drastically reduced padding to minimize white space */
-            padding: 5mm 10mm; 
+            height: 297mm; /* Fixed height for WYSIWYG */
+            padding: 10mm 12mm; 
             box-shadow: 0 0 25px rgba(0,0,0,0.25);
             position: relative;
             font-family: 'Arial', sans-serif;
@@ -40,6 +39,7 @@
             box-sizing: border-box;
             display: flex;
             flex-direction: column;
+            transform-origin: top center; /* Crucial for mobile scaling */
         }
 
         /* MODAL STYLES */
@@ -87,66 +87,63 @@
         @keyframes fadein { from {bottom: 0; opacity: 0;} to {bottom: 30px; opacity: 1;} }
         @keyframes fadeout { from {bottom: 30px; opacity: 1;} to {bottom: 0; opacity: 0;} }
 
-        /* HEADER DESIGN - SUPER COMPACT */
-        .header-top { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 5px; } 
+        /* HEADER DESIGN */
+        .header-top { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 15px; } 
         .logo-area { width: 45%; }
-        .logo-img { max-width: 180px; max-height: 80px; object-fit: contain; display: block; margin-bottom: 2px; }
-        .vendor-details { font-size: 8.5pt; line-height: 1.2; color: #444; }
-        .vendor-name { font-weight: bold; font-size: 14pt; color: #1e40af; text-transform: uppercase; margin-bottom: 2px; }
+        .logo-img { max-width: 180px; max-height: 80px; object-fit: contain; display: block; margin-bottom: 10px; }
+        .vendor-details { font-size: 9pt; line-height: 1.4; color: #444; }
+        .vendor-name { font-weight: bold; font-size: 14pt; color: #1e40af; text-transform: uppercase; margin-bottom: 5px; }
 
         .client-box { 
             width: 45%; 
             border: 1px solid #94a3b8; 
             border-radius: 4px;
-            padding: 6px; 
+            padding: 12px; 
             background-color: #f8fafc;
-            min-height: 90px;
+            min-height: 120px;
         }
-        .client-label { font-size: 8pt; color: #64748b; text-transform: uppercase; font-weight: bold; margin-bottom: 2px; }
+        .client-label { font-size: 8pt; color: #64748b; text-transform: uppercase; font-weight: bold; margin-bottom: 5px; }
         
-        /* DOC TITLE - COMPACT */
-        .doc-title-row { text-align: center; margin-bottom: 5px; }
-        .doc-title { font-size: 18pt; font-weight: 800; color: #1e3a8a; text-transform: uppercase; letter-spacing: 1px; border-bottom: 2px solid #1e3a8a; display: inline-block; padding-bottom: 1px; }
+        /* DOC TITLE */
+        .doc-title-row { text-align: center; margin-bottom: 10px; }
+        .doc-title { font-size: 22pt; font-weight: 800; color: #1e3a8a; text-transform: uppercase; letter-spacing: 2px; border-bottom: 3px solid #1e3a8a; display: inline-block; padding-bottom: 5px; }
 
-        /* INFO BAR - COMPACT */
+        /* INFO BAR */
         .info-bar { 
             display: flex; width: 100%; border: 1px solid #cbd5e1; 
-            margin-bottom: 5px; border-radius: 4px; overflow: hidden; 
+            margin-bottom: 15px; border-radius: 4px; overflow: hidden; 
         }
         .info-cell { flex: 1; border-right: 1px solid #cbd5e1; text-align: center; }
         .info-cell:last-child { border-right: none; }
-        .info-header { background-color: #e2e8f0; font-size: 7pt; font-weight: bold; padding: 2px; color: #475569; text-transform: uppercase; }
-        .info-value { padding: 4px; font-weight: 600; font-size: 8.5pt; color: #0f172a; background: white; }
+        .info-header { background-color: #e2e8f0; font-size: 8pt; font-weight: bold; padding: 6px; color: #475569; text-transform: uppercase; }
+        .info-value { padding: 8px; font-weight: 600; font-size: 10pt; color: #0f172a; background: white; }
 
-        /* MAIN TABLE - COMPACT */
-        .main-table { width: 100%; border-collapse: collapse; margin-bottom: 0; } /* Remove bottom margin */
+        /* MAIN TABLE */
+        .main-table { width: 100%; border-collapse: collapse; margin-bottom: 0; } 
         .main-table th { 
-            background-color: #1e40af; color: white; padding: 4px 3px; 
-            font-size: 7.5pt; text-transform: uppercase; border: 1px solid #1e40af; 
+            background-color: #1e40af; color: white; padding: 8px 5px; 
+            font-size: 9pt; text-transform: uppercase; border: 1px solid #1e40af; 
         }
         .main-table td { 
-            border: 1px solid #e2e8f0; padding: 3px 3px; 
-            text-align: center; font-size: 8.5pt; color: #334155;
+            border: 1px solid #e2e8f0; padding: 6px 5px; 
+            text-align: center; font-size: 9pt; color: #334155;
         }
-        .col-art { text-align: left !important; padding-left: 6px !important; font-weight: 600; }
+        .col-art { text-align: left !important; padding-left: 10px !important; font-weight: 600; }
         .row-stripe:nth-child(even) { background-color: #f8fafc; }
 
-        /* FLEX SPACER FOR TABLE BODY */
-        /* This pushes the footer down without needing empty rows */
-        .content-spacer {
-            flex-grow: 1;
-        }
+        /* CONTENT SPACER */
+        .content-spacer { flex-grow: 1; }
 
-        /* FOOTER TOTALS - COMPACT */
+        /* FOOTER TOTALS */
         .footer-area { 
-            margin-top: 5px; 
+            margin-top: 15px; 
             display: flex; 
             justify-content: space-between; 
             align-items: flex-start; 
-            margin-bottom: 5px; 
+            margin-bottom: 20px; 
         }
-        .amount-text { width: 60%; padding-right: 10px; }
-        .amount-words { font-style: italic; font-weight: 600; color: #334155; margin-top: 2px; font-size: 9pt; }
+        .amount-text { width: 60%; padding-right: 20px; }
+        .amount-words { font-style: italic; font-weight: 600; color: #334155; margin-top: 5px; font-size: 11pt; }
         
         .total-box { 
             width: 35%; 
@@ -159,7 +156,7 @@
             display: flex; 
             justify-content: space-between; 
             align-items: center;
-            padding: 5px 8px; 
+            padding: 10px 15px; 
             border-bottom: 1px solid #e2e8f0; 
             background: white;
         }
@@ -167,19 +164,19 @@
             background-color: #1e40af; 
             color: white; 
             border-bottom: none; 
-            padding: 6px 8px;
+            padding: 12px 15px;
         }
-        .total-label { font-weight: bold; font-size: 8pt; text-transform: uppercase; }
+        .total-label { font-weight: bold; font-size: 10pt; text-transform: uppercase; }
         .total-value-group { display: flex; align-items: baseline; gap: 4px; }
-        .total-value-main { font-size: 12pt; font-weight: 800; }
-        .total-currency { font-size: 8pt; font-weight: 600; opacity: 0.9; }
+        .total-value-main { font-size: 16pt; font-weight: 800; }
+        .total-currency { font-size: 10pt; font-weight: 600; opacity: 0.9; }
 
-        /* BOTTOM INFO - COMPACT */
+        /* BOTTOM INFO */
         .bottom-info { 
-            border-top: 1px solid #cbd5e1; padding-top: 4px; 
-            font-size: 7pt; color: #64748b; 
+            border-top: 1px solid #cbd5e1; padding-top: 10px; 
+            font-size: 8pt; color: #64748b; 
             display: flex; justify-content: space-between; 
-            margin-top: auto; /* This already pushes it to the bottom of the flex container */
+            margin-top: auto; 
         }
         
         /* CONTROLS */
@@ -209,6 +206,7 @@
         /* PRODUCT GRID VIEW */
         .prod-grid-view { 
             display: grid; 
+            /* Use minmax to allow 2 columns on mobile if screen allows, else 1 */
             grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); 
             gap: 16px; 
             overflow-y: auto; 
@@ -225,9 +223,8 @@
             cursor: pointer; 
             transition: all 0.2s; 
             box-shadow: 0 2px 4px rgba(0,0,0,0.02); 
-            /* Explicit height and grid layout */
             display: grid;
-            grid-template-rows: 1fr auto; /* Content takes space, footer is auto sized at bottom */
+            grid-template-rows: 1fr auto; 
             min-height: 150px; 
             overflow: hidden;
         }
@@ -237,23 +234,27 @@
             box-shadow: 0 8px 15px rgba(0,0,0,0.08); 
         }
         
-        .card-top {
-            padding: 12px;
-            /* No bottom padding needed, grid handles separation */
-        }
+        .card-top { padding: 12px; }
 
         .card-footer {
-            padding: 8px 12px;
+            padding: 12px; 
             background: white;
             border-top: 1px solid #f3f4f6;
             display: flex;
             align-items: center;
             justify-content: space-between;
-            /* Ensure footer has enough height */
             min-height: 50px;
+            gap: 10px; 
+            flex-wrap: wrap; 
+        }
+
+        .card-controls {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            flex-shrink: 0;
         }
         
-        /* Truncate long text */
         .line-clamp-3 {
             display: -webkit-box;
             -webkit-line-clamp: 3;
@@ -271,66 +272,57 @@
 
         /* --- RESPONSIVE CSS --- */
         @media (max-width: 768px) {
-            /* Change layout to column on mobile */
-            .app-container { 
-                flex-direction: column; 
-                height: auto;
-                overflow: auto;
-            }
+            body { height: auto; overflow-y: auto; }
+            .app-container { flex-direction: column; height: auto; overflow: visible; }
             
-            /* Sidebar takes full width */
             .controls { 
                 width: 100%; 
+                height: auto; 
                 border-right: none; 
                 border-bottom: 1px solid #e5e7eb;
-                box-shadow: none;
                 padding: 15px;
             }
             
-            /* Preview area adjustments */
             .preview-area {
-                padding: 20px 10px;
-                background: #f3f4f6; /* Match body bg on mobile for seamless look */
-            }
-
-            /* Scale down the A4 paper to fit mobile screen width */
-            .a4-page {
-                transform-origin: top center;
-                /* Calculate scale: (screen width - padding) / paper width */
-                /* Use a safe generic scale for now, JS could be more precise */
-                /* We'll use a media query range to approximate */
-            }
-
-            /* Mobile Grid for products */
-            .prod-grid-view {
-                grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); /* Smaller cards */
-                height: auto; /* Let it grow naturally */
-                max-height: 60vh;
-            }
-            
-            .modal-content {
-                width: 95%;
-                max-height: 85vh;
-                padding: 15px;
-            }
-        }
-
-        /* Specific scaling for very small screens (phones) */
-        @media (max-width: 480px) {
-            .a4-page {
-                /* 210mm is approx 794px. iPhone width is ~375px. 375/794 ~ 0.47 */
-                transform: scale(0.45); 
-                margin-bottom: -140mm; /* Pull up the whitespace caused by scaling */
-            }
-            #pages-container {
-                /* Center the scaled page */
-                align-items: flex-start; 
-                justify-content: center;
+                width: 100%;
+                height: auto;
+                padding: 15px 5px;
+                background: #4b5563;
+                min-height: 400px;
                 overflow-x: hidden;
             }
-        }
 
-        /* Tablet / Small Desktop scaling */
+            .a4-page {
+                transform-origin: top center;
+                margin-bottom: 20px;
+                transform: scale(0.45); 
+            }
+
+            .modal-content {
+                width: 95%;
+                max-height: 90vh;
+                padding: 15px;
+            }
+            
+            .prod-grid-view {
+                grid-template-columns: 1fr;
+                gap: 10px;
+                height: 60vh; 
+            }
+            
+            .btn-main, .btn-outline, button {
+                padding: 14px; 
+                font-size: 1rem;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .a4-page {
+                transform: scale(0.45); 
+                margin-bottom: -140mm; 
+            }
+        }
+        
         @media (min-width: 481px) and (max-width: 850px) {
              .a4-page {
                 transform: scale(0.6);
@@ -338,11 +330,43 @@
             }
         }
         
+        /* --- PRINT STYLES FOR PDF GENERATION --- */
+        /* These styles force a desktop-like width during generation */
+        .generating-pdf .a4-page {
+            width: 210mm !important;
+            height: 297mm !important;
+            transform: none !important;
+            margin: 0 !important;
+            box-shadow: none !important;
+        }
+        
+        .generating-pdf .preview-area {
+            width: auto !important;
+            padding: 0 !important;
+            background: white !important;
+            align-items: flex-start !important;
+        }
+
+        .generating-pdf #pages-container {
+            width: 210mm !important;
+        }
+        
         @media print {
             body * { visibility: hidden; }
             #pages-container, #pages-container * { visibility: visible; }
             #pages-container { position: absolute; left: 0; top: 0; width: 100%; margin: 0; }
-            .a4-page { margin: 0; margin-bottom: 0; page-break-after: always; page-break-inside: avoid; box-shadow: none; height: 296mm; max-height: 296mm; overflow: hidden; position: relative; transform: none !important; } /* Reset scale for print */
+            .a4-page { 
+                margin: 0; 
+                margin-bottom: 0; 
+                page-break-after: always; 
+                page-break-inside: avoid; 
+                box-shadow: none; 
+                height: 296mm; 
+                max-height: 296mm; 
+                overflow: hidden; 
+                position: relative; 
+                transform: none !important; 
+            }
             .a4-page:last-child { page-break-after: avoid; margin-bottom: 0; }
             .no-print { display: none !important; }
         }
@@ -610,7 +634,48 @@
 
         renderCatalog();
         updateUI(); 
+        
+        // Initial fit
+        setTimeout(fitPageToScreen, 500);
     };
+    
+    // --- AUTO ZOOM SCALING FUNCTION ---
+    function fitPageToScreen() {
+        const container = document.querySelector('.preview-area');
+        const pages = document.querySelectorAll('.a4-page');
+        
+        if (!container || pages.length === 0) return;
+        
+        // A4 width in pixels at 96 DPI is approx 794px (210mm)
+        // We want to fit this into the container width minus padding
+        const containerWidth = container.clientWidth;
+        const paperWidth = pages[0].offsetWidth || 794; 
+        
+        // Add some padding (e.g., 20px total)
+        const availableWidth = containerWidth - 20; 
+        
+        let scale = 1;
+        
+        // If container is smaller than paper, calculate scale
+        if (availableWidth < paperWidth) {
+            scale = availableWidth / paperWidth;
+        }
+        
+        // Apply scale to all pages
+        pages.forEach(page => {
+            page.style.transform = `scale(${scale})`;
+            // Fix layout flow: scaling leaves empty space below because element size doesn't change in DOM flow
+            // We need to reduce margin-bottom to pull up content
+            const height = page.offsetHeight;
+            const scaledHeight = height * scale;
+            const spaceToRemove = height - scaledHeight;
+            
+            page.style.marginBottom = `-${spaceToRemove}px`;
+        });
+    }
+
+    // Call resize function on window resize
+    window.addEventListener('resize', fitPageToScreen);
 
     // --- SEARCH LOGIC ---
     function searchProducts() {
@@ -672,7 +737,7 @@
                             <option value="Unité">Unité</option>
                         </select>
                         
-                        <div class="flex items-center gap-1 w-full justify-end">
+                        <div class="flex items-center gap-1 w-full justify-end card-controls">
                             <input type="number" id="qty-${index}-${currentTab}" value="1" min="1" step="1" 
                                 class="w-12 h-8 text-center border rounded text-sm font-bold bg-gray-50 outline-none focus:border-blue-500" 
                                 onclick="event.stopPropagation()">
@@ -698,7 +763,7 @@
                     <div class="card-footer">
                         <div class="text-blue-700 font-extrabold text-sm whitespace-nowrap">${p.price.toFixed(2)} DHS</div>
                         
-                        <div class="flex items-center gap-1">
+                        <div class="flex items-center gap-1 card-controls">
                             <input type="number" id="qty-${index}-${currentTab}" value="1" min="1" step="1" 
                                 class="w-10 h-8 text-center border rounded text-sm font-bold bg-gray-50 outline-none focus:border-blue-500" 
                                 onclick="event.stopPropagation()">
@@ -895,6 +960,9 @@
                 img.classList.remove('hidden');
             });
         }
+        
+        // Trigger scaling after render
+        setTimeout(fitPageToScreen, 100);
     }
 
     function buildPageHTML(chunk, pageIdx, totalPages, isLast, inputs, grandTotal, cartonCount, totalUnitsCount, isEchantillon) {
@@ -936,10 +1004,6 @@
                 `;
             }
         });
-
-        // NO EMPTY ROWS ADDED - As requested.
-        // Just a flex spacer to push footer down is handled by CSS .content-spacer if needed, 
-        // but user specifically asked for NO empty rows, so we just end table.
 
         // Header Logic
         let headerColsHTML = '';
@@ -1155,19 +1219,35 @@
     }
 
     function generatePDF() {
+        // 1. Reset Scale for full resolution capture
+        const pages = document.querySelectorAll('.a4-page');
+        pages.forEach(p => {
+            p.style.transform = 'none';
+            p.style.marginBottom = '0';
+        });
+        
+        // Force desktop layout class
+        document.body.classList.add('generating-pdf');
+
         const element = document.getElementById('pages-container');
         const opt = {
             margin: 0,
             filename: `${document.getElementById('docTypeInput').value}_${document.getElementById('clientName').value}.pdf`,
             image: { type: 'jpeg', quality: 0.98 },
-            html2canvas: { scale: 2 },
+            html2canvas: { scale: 2, scrollY: 0, useCORS: true },
             jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
             // Add custom pagebreak settings to prevent extra page
             pagebreak: { mode: ['avoid-all', 'css', 'legacy'] }
         };
+        
         document.querySelectorAll('.no-print').forEach(el => el.style.display = 'none');
+        
         html2pdf().set(opt).from(element).save().then(() => {
             document.querySelectorAll('.no-print').forEach(el => el.style.display = '');
+            // Restore scale for mobile viewing
+            fitPageToScreen();
+            // Remove force desktop layout class
+            document.body.classList.remove('generating-pdf');
         });
     }
 
