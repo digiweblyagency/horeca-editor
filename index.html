@@ -22,7 +22,7 @@
         .preview-area { flex-grow: 1; padding: 40px; overflow-y: auto; display: flex; justify-content: center; background: #64748b; }
         
         /* The Paper Container */
-        #pages-container { display: flex; flex-direction: column; gap: 30px; align-items: center; transition: transform 0.3s; }
+        #pages-container { display: flex; flex-direction: column; gap: 30px; align-items: center; }
 
         /* The Paper */
         .a4-page {
@@ -30,7 +30,7 @@
             width: 210mm;
             min-height: 297mm; /* Standard A4 Height */
             height: 297mm;
-            /* Reduced padding for better use of space */
+            /* Drastically reduced padding to minimize white space */
             padding: 5mm 10mm; 
             box-shadow: 0 0 25px rgba(0,0,0,0.25);
             position: relative;
@@ -40,7 +40,6 @@
             box-sizing: border-box;
             display: flex;
             flex-direction: column;
-            transform-origin: top center; /* Crucial for mobile scaling */
         }
 
         /* MODAL STYLES */
@@ -120,7 +119,7 @@
         .info-value { padding: 4px; font-weight: 600; font-size: 8.5pt; color: #0f172a; background: white; }
 
         /* MAIN TABLE - COMPACT */
-        .main-table { width: 100%; border-collapse: collapse; margin-bottom: 0; } 
+        .main-table { width: 100%; border-collapse: collapse; margin-bottom: 0; } /* Remove bottom margin */
         .main-table th { 
             background-color: #1e40af; color: white; padding: 4px 3px; 
             font-size: 7.5pt; text-transform: uppercase; border: 1px solid #1e40af; 
@@ -132,8 +131,11 @@
         .col-art { text-align: left !important; padding-left: 6px !important; font-weight: 600; }
         .row-stripe:nth-child(even) { background-color: #f8fafc; }
 
-        /* CONTENT SPACER (Replaces empty rows) */
-        .content-spacer { flex-grow: 1; }
+        /* FLEX SPACER FOR TABLE BODY */
+        /* This pushes the footer down without needing empty rows */
+        .content-spacer {
+            flex-grow: 1;
+        }
 
         /* FOOTER TOTALS - COMPACT */
         .footer-area { 
@@ -177,7 +179,7 @@
             border-top: 1px solid #cbd5e1; padding-top: 4px; 
             font-size: 7pt; color: #64748b; 
             display: flex; justify-content: space-between; 
-            margin-top: auto; 
+            margin-top: auto; /* This already pushes it to the bottom of the flex container */
         }
         
         /* CONTROLS */
@@ -204,11 +206,10 @@
         .tab:hover { background: #e2e8f0; }
         .tab.active { background: #1e40af; color: white; border-color: #1e40af; }
         
-        /* GRID VIEW - IMPROVED FOR PC */
+        /* PRODUCT GRID VIEW */
         .prod-grid-view { 
             display: grid; 
-            /* Ensure min-width is large enough to prevent squishing */
-            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); 
+            grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); 
             gap: 16px; 
             overflow-y: auto; 
             padding: 10px; 
@@ -236,26 +237,20 @@
             box-shadow: 0 8px 15px rgba(0,0,0,0.08); 
         }
         
-        .card-top { padding: 12px; }
+        .card-top {
+            padding: 12px;
+            /* No bottom padding needed, grid handles separation */
+        }
 
         .card-footer {
-            padding: 12px; /* More padding for footer */
+            padding: 8px 12px;
             background: white;
             border-top: 1px solid #f3f4f6;
             display: flex;
             align-items: center;
             justify-content: space-between;
+            /* Ensure footer has enough height */
             min-height: 50px;
-            gap: 10px; /* Increased Gap between price/controls */
-            flex-wrap: wrap; /* Allow wrapping if absolutely necessary but min-width should prevent it */
-        }
-
-        /* Ensure controls group stays together */
-        .card-controls {
-            display: flex;
-            align-items: center;
-            gap: 5px;
-            flex-shrink: 0; /* Prevent shrinking */
         }
         
         /* Truncate long text */
@@ -276,65 +271,65 @@
 
         /* --- RESPONSIVE CSS --- */
         @media (max-width: 768px) {
-            body { height: auto; overflow-y: auto; }
-            .app-container { flex-direction: column; height: auto; overflow: visible; }
+            /* Change layout to column on mobile */
+            .app-container { 
+                flex-direction: column; 
+                height: auto;
+                overflow: auto;
+            }
             
-            /* Sidebar becomes top bar */
+            /* Sidebar takes full width */
             .controls { 
                 width: 100%; 
-                height: auto; 
                 border-right: none; 
                 border-bottom: 1px solid #e5e7eb;
+                box-shadow: none;
                 padding: 15px;
             }
             
-            /* Preview Area */
+            /* Preview area adjustments */
             .preview-area {
-                width: 100%;
-                height: auto;
-                padding: 15px 5px;
-                background: #4b5563;
-                min-height: 400px;
-                overflow-x: hidden;
+                padding: 20px 10px;
+                background: #f3f4f6; /* Match body bg on mobile for seamless look */
             }
 
-            /* Scale PDF preview to fit screen */
+            /* Scale down the A4 paper to fit mobile screen width */
             .a4-page {
                 transform-origin: top center;
-                margin-bottom: 20px;
-                /* Initial scale fallback, JS will update this */
-                transform: scale(0.45); 
+                /* Calculate scale: (screen width - padding) / paper width */
+                /* Use a safe generic scale for now, JS could be more precise */
+                /* We'll use a media query range to approximate */
             }
 
-            /* Modal Full Screen on Mobile */
+            /* Mobile Grid for products */
+            .prod-grid-view {
+                grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); /* Smaller cards */
+                height: auto; /* Let it grow naturally */
+                max-height: 60vh;
+            }
+            
             .modal-content {
                 width: 95%;
-                max-height: 90vh;
+                max-height: 85vh;
                 padding: 15px;
             }
-            
-            /* 1 Column Grid for Products on Mobile */
-            .prod-grid-view {
-                grid-template-columns: 1fr;
-                gap: 10px;
-                height: 60vh; /* More height on mobile */
-            }
-            
-            /* Adjust buttons for touch */
-            .btn-main, .btn-outline, button {
-                padding: 14px; /* Bigger touch target */
-                font-size: 1rem;
-            }
         }
-        
+
         /* Specific scaling for very small screens (phones) */
         @media (max-width: 480px) {
             .a4-page {
+                /* 210mm is approx 794px. iPhone width is ~375px. 375/794 ~ 0.47 */
                 transform: scale(0.45); 
                 margin-bottom: -140mm; /* Pull up the whitespace caused by scaling */
             }
+            #pages-container {
+                /* Center the scaled page */
+                align-items: flex-start; 
+                justify-content: center;
+                overflow-x: hidden;
+            }
         }
-        
+
         /* Tablet / Small Desktop scaling */
         @media (min-width: 481px) and (max-width: 850px) {
              .a4-page {
@@ -343,35 +338,13 @@
             }
         }
         
-        /* Remove scale for printing */
         @media print {
             body * { visibility: hidden; }
             #pages-container, #pages-container * { visibility: visible; }
             #pages-container { position: absolute; left: 0; top: 0; width: 100%; margin: 0; }
-            .a4-page { 
-                margin: 0; 
-                margin-bottom: 0; 
-                page-break-after: always; 
-                page-break-inside: avoid; 
-                box-shadow: none; 
-                height: 296mm; 
-                max-height: 296mm; 
-                overflow: hidden; 
-                position: relative; 
-                transform: none !important; /* RESET SCALE */
-            }
+            .a4-page { margin: 0; margin-bottom: 0; page-break-after: always; page-break-inside: avoid; box-shadow: none; height: 296mm; max-height: 296mm; overflow: hidden; position: relative; transform: none !important; } /* Reset scale for print */
             .a4-page:last-child { page-break-after: avoid; margin-bottom: 0; }
             .no-print { display: none !important; }
-        }
-
-        /* FORCE DESKTOP LAYOUT DURING PDF GENERATION */
-        /* This class will be added to body during generation */
-        body.generating-pdf .app-container {
-            display: block !important;
-        }
-        body.generating-pdf .a4-page {
-            transform: none !important;
-            margin-bottom: 0 !important;
         }
     </style>
 </head>
@@ -637,48 +610,7 @@
 
         renderCatalog();
         updateUI(); 
-        
-        // Initial fit
-        setTimeout(fitPageToScreen, 500);
     };
-    
-    // --- AUTO ZOOM SCALING FUNCTION ---
-    function fitPageToScreen() {
-        const container = document.querySelector('.preview-area');
-        const pages = document.querySelectorAll('.a4-page');
-        
-        if (!container || pages.length === 0) return;
-        
-        // A4 width in pixels at 96 DPI is approx 794px (210mm)
-        // We want to fit this into the container width minus padding
-        const containerWidth = container.clientWidth;
-        const paperWidth = pages[0].offsetWidth || 794; 
-        
-        // Add some padding (e.g., 20px total)
-        const availableWidth = containerWidth - 20; 
-        
-        let scale = 1;
-        
-        // If container is smaller than paper, calculate scale
-        if (availableWidth < paperWidth) {
-            scale = availableWidth / paperWidth;
-        }
-        
-        // Apply scale to all pages
-        pages.forEach(page => {
-            page.style.transform = `scale(${scale})`;
-            // Fix layout flow: scaling leaves empty space below because element size doesn't change in DOM flow
-            // We need to reduce margin-bottom to pull up content
-            const height = page.offsetHeight;
-            const scaledHeight = height * scale;
-            const spaceToRemove = height - scaledHeight;
-            
-            page.style.marginBottom = `-${spaceToRemove}px`;
-        });
-    }
-
-    // Call resize function on window resize
-    window.addEventListener('resize', fitPageToScreen);
 
     // --- SEARCH LOGIC ---
     function searchProducts() {
@@ -740,7 +672,7 @@
                             <option value="Unité">Unité</option>
                         </select>
                         
-                        <div class="flex items-center gap-1 w-full justify-end card-controls">
+                        <div class="flex items-center gap-1 w-full justify-end">
                             <input type="number" id="qty-${index}-${currentTab}" value="1" min="1" step="1" 
                                 class="w-12 h-8 text-center border rounded text-sm font-bold bg-gray-50 outline-none focus:border-blue-500" 
                                 onclick="event.stopPropagation()">
@@ -766,7 +698,7 @@
                     <div class="card-footer">
                         <div class="text-blue-700 font-extrabold text-sm whitespace-nowrap">${p.price.toFixed(2)} DHS</div>
                         
-                        <div class="flex items-center gap-1 card-controls">
+                        <div class="flex items-center gap-1">
                             <input type="number" id="qty-${index}-${currentTab}" value="1" min="1" step="1" 
                                 class="w-10 h-8 text-center border rounded text-sm font-bold bg-gray-50 outline-none focus:border-blue-500" 
                                 onclick="event.stopPropagation()">
@@ -963,9 +895,6 @@
                 img.classList.remove('hidden');
             });
         }
-        
-        // Trigger scaling after render
-        setTimeout(fitPageToScreen, 100);
     }
 
     function buildPageHTML(chunk, pageIdx, totalPages, isLast, inputs, grandTotal, cartonCount, totalUnitsCount, isEchantillon) {
@@ -1007,6 +936,10 @@
                 `;
             }
         });
+
+        // NO EMPTY ROWS ADDED - As requested.
+        // Just a flex spacer to push footer down is handled by CSS .content-spacer if needed, 
+        // but user specifically asked for NO empty rows, so we just end table.
 
         // Header Logic
         let headerColsHTML = '';
@@ -1222,13 +1155,6 @@
     }
 
     function generatePDF() {
-        // 1. Reset Scale for full resolution capture
-        const pages = document.querySelectorAll('.a4-page');
-        pages.forEach(p => {
-            p.style.transform = 'none';
-            p.style.marginBottom = '0';
-        });
-
         const element = document.getElementById('pages-container');
         const opt = {
             margin: 0,
@@ -1239,13 +1165,9 @@
             // Add custom pagebreak settings to prevent extra page
             pagebreak: { mode: ['avoid-all', 'css', 'legacy'] }
         };
-        
         document.querySelectorAll('.no-print').forEach(el => el.style.display = 'none');
-        
         html2pdf().set(opt).from(element).save().then(() => {
             document.querySelectorAll('.no-print').forEach(el => el.style.display = '');
-            // Restore scale for mobile viewing
-            fitPageToScreen();
         });
     }
 
