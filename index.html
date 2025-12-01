@@ -22,7 +22,7 @@
         .preview-area { flex-grow: 1; padding: 40px; overflow-y: auto; display: flex; justify-content: center; background: #64748b; }
         
         /* The Paper Container */
-        #pages-container { display: flex; flex-direction: column; gap: 30px; align-items: center; }
+        #pages-container { display: flex; flex-direction: column; gap: 30px; align-items: center; transition: transform 0.3s; }
 
         /* The Paper */
         .a4-page {
@@ -362,6 +362,16 @@
             }
             .a4-page:last-child { page-break-after: avoid; margin-bottom: 0; }
             .no-print { display: none !important; }
+        }
+
+        /* FORCE DESKTOP LAYOUT DURING PDF GENERATION */
+        /* This class will be added to body during generation */
+        body.generating-pdf .app-container {
+            display: block !important;
+        }
+        body.generating-pdf .a4-page {
+            transform: none !important;
+            margin-bottom: 0 !important;
         }
     </style>
 </head>
@@ -997,8 +1007,6 @@
                 `;
             }
         });
-
-        // NO EMPTY ROWS ADDED - Loop removed
 
         // Header Logic
         let headerColsHTML = '';
