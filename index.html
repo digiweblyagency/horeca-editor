@@ -30,7 +30,8 @@
             width: 210mm;
             min-height: 297mm; /* Standard A4 Height */
             height: 297mm;
-            padding: 10mm 15mm;
+            /* Drastically reduced padding to minimize white space */
+            padding: 5mm 10mm; 
             box-shadow: 0 0 25px rgba(0,0,0,0.25);
             position: relative;
             font-family: 'Arial', sans-serif;
@@ -86,69 +87,96 @@
         @keyframes fadein { from {bottom: 0; opacity: 0;} to {bottom: 30px; opacity: 1;} }
         @keyframes fadeout { from {bottom: 30px; opacity: 1;} to {bottom: 0; opacity: 0;} }
 
-        /* HEADER DESIGN */
-        .header-top { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 20px; }
+        /* HEADER DESIGN - SUPER COMPACT */
+        .header-top { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 5px; } 
         .logo-area { width: 45%; }
-        .logo-img { max-width: 180px; max-height: 80px; object-fit: contain; display: block; margin-bottom: 10px; }
-        .vendor-details { font-size: 9pt; line-height: 1.4; color: #444; }
-        .vendor-name { font-weight: bold; font-size: 14pt; color: #1e40af; text-transform: uppercase; margin-bottom: 5px; }
+        .logo-img { max-width: 180px; max-height: 80px; object-fit: contain; display: block; margin-bottom: 2px; }
+        .vendor-details { font-size: 8.5pt; line-height: 1.2; color: #444; }
+        .vendor-name { font-weight: bold; font-size: 14pt; color: #1e40af; text-transform: uppercase; margin-bottom: 2px; }
 
         .client-box { 
             width: 45%; 
             border: 1px solid #94a3b8; 
             border-radius: 4px;
-            padding: 15px; 
+            padding: 6px; 
             background-color: #f8fafc;
-            min-height: 130px;
+            min-height: 90px;
         }
-        .client-label { font-size: 8pt; color: #64748b; text-transform: uppercase; font-weight: bold; margin-bottom: 5px; }
+        .client-label { font-size: 8pt; color: #64748b; text-transform: uppercase; font-weight: bold; margin-bottom: 2px; }
         
-        /* DOC TITLE */
-        .doc-title-row { text-align: center; margin-bottom: 15px; }
-        .doc-title { font-size: 22pt; font-weight: 800; color: #1e3a8a; text-transform: uppercase; letter-spacing: 2px; border-bottom: 3px solid #1e3a8a; display: inline-block; padding-bottom: 5px; }
+        /* DOC TITLE - COMPACT */
+        .doc-title-row { text-align: center; margin-bottom: 5px; }
+        .doc-title { font-size: 18pt; font-weight: 800; color: #1e3a8a; text-transform: uppercase; letter-spacing: 1px; border-bottom: 2px solid #1e3a8a; display: inline-block; padding-bottom: 1px; }
 
-        /* INFO BAR */
+        /* INFO BAR - COMPACT */
         .info-bar { 
             display: flex; width: 100%; border: 1px solid #cbd5e1; 
-            margin-bottom: 20px; border-radius: 4px; overflow: hidden; 
+            margin-bottom: 5px; border-radius: 4px; overflow: hidden; 
         }
         .info-cell { flex: 1; border-right: 1px solid #cbd5e1; text-align: center; }
         .info-cell:last-child { border-right: none; }
-        .info-header { background-color: #e2e8f0; font-size: 8pt; font-weight: bold; padding: 6px; color: #475569; text-transform: uppercase; }
-        .info-value { padding: 8px; font-weight: 600; font-size: 10pt; color: #0f172a; background: white; }
+        .info-header { background-color: #e2e8f0; font-size: 7pt; font-weight: bold; padding: 2px; color: #475569; text-transform: uppercase; }
+        .info-value { padding: 4px; font-weight: 600; font-size: 8.5pt; color: #0f172a; background: white; }
 
-        /* MAIN TABLE */
+        /* MAIN TABLE - COMPACT */
         .main-table { width: 100%; border-collapse: collapse; margin-bottom: auto; }
         .main-table th { 
-            background-color: #1e40af; color: white; padding: 8px 5px; 
-            font-size: 9pt; text-transform: uppercase; border: 1px solid #1e40af; 
+            background-color: #1e40af; color: white; padding: 4px 3px; 
+            font-size: 7.5pt; text-transform: uppercase; border: 1px solid #1e40af; 
         }
         .main-table td { 
-            border: 1px solid #e2e8f0; padding: 6px 5px; 
-            text-align: center; font-size: 9pt; color: #334155;
+            border: 1px solid #e2e8f0; padding: 3px 3px; 
+            text-align: center; font-size: 8.5pt; color: #334155;
         }
-        .col-art { text-align: left !important; padding-left: 10px !important; font-weight: 600; }
+        .col-art { text-align: left !important; padding-left: 6px !important; font-weight: 600; }
         .row-stripe:nth-child(even) { background-color: #f8fafc; }
 
-        /* FOOTER TOTALS */
-        .footer-area { margin-top: 20px; display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 40px; }
-        .amount-text { width: 60%; padding-right: 20px; }
-        .amount-words { font-style: italic; font-weight: 600; color: #334155; margin-top: 5px; font-size: 11pt; }
+        /* FOOTER TOTALS - COMPACT */
+        .footer-area { 
+            margin-top: 5px; 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: flex-start; 
+            margin-bottom: 5px; 
+        }
+        .amount-text { width: 60%; padding-right: 10px; }
+        .amount-words { font-style: italic; font-weight: 600; color: #334155; margin-top: 2px; font-size: 9pt; }
         
-        .total-box { width: 35%; border: 2px solid #1e40af; border-radius: 4px; overflow: hidden; }
-        .total-row { display: flex; justify-content: space-between; padding: 8px 12px; border-bottom: 1px solid #e2e8f0; }
-        .total-row.final { background-color: #1e40af; color: white; border-bottom: none; }
-        .total-label { font-weight: bold; }
+        .total-box { 
+            width: 35%; 
+            border: 2px solid #1e40af; 
+            border-radius: 6px; 
+            overflow: hidden; 
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+        .total-row { 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center;
+            padding: 5px 8px; 
+            border-bottom: 1px solid #e2e8f0; 
+            background: white;
+        }
+        .total-row.final { 
+            background-color: #1e40af; 
+            color: white; 
+            border-bottom: none; 
+            padding: 6px 8px;
+        }
+        .total-label { font-weight: bold; font-size: 8pt; text-transform: uppercase; }
+        .total-value-group { display: flex; align-items: baseline; gap: 4px; }
+        .total-value-main { font-size: 12pt; font-weight: 800; }
+        .total-currency { font-size: 8pt; font-weight: 600; opacity: 0.9; }
 
-        /* BOTTOM INFO */
+        /* BOTTOM INFO - COMPACT */
         .bottom-info { 
-            border-top: 1px solid #cbd5e1; padding-top: 10px; 
-            font-size: 8pt; color: #64748b; 
+            border-top: 1px solid #cbd5e1; padding-top: 4px; 
+            font-size: 7pt; color: #64748b; 
             display: flex; justify-content: space-between; 
             margin-top: auto;
         }
         
-        /* CONTROLS & GRID */
+        /* CONTROLS */
         input, select, textarea { 
             width: 100%; 
             padding: 12px; 
@@ -172,13 +200,61 @@
         .tab:hover { background: #e2e8f0; }
         .tab.active { background: #1e40af; color: white; border-color: #1e40af; }
         
-        .prod-grid-view { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 12px; overflow-y: auto; padding: 5px; height: 50vh; align-content: start; }
-        .prod-card-large { 
-            background: white; border: 1px solid #e2e8f0; padding: 12px; border-radius: 8px; 
-            cursor: pointer; display: flex; flex-direction: column; justify-content: space-between;
-            transition: 0.2s; box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        /* PRODUCT GRID VIEW */
+        .prod-grid-view { 
+            display: grid; 
+            grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); 
+            gap: 16px; 
+            overflow-y: auto; 
+            padding: 10px; 
+            height: 55vh; 
+            align-content: start; 
         }
-        .prod-card-large:hover { border-color: #3b82f6; transform: translateY(-2px); box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
+        
+        /* FIXED CARD LAYOUT - GRID BASED */
+        .prod-card-large { 
+            background: white; 
+            border: 1px solid #e5e7eb; 
+            border-radius: 10px; 
+            cursor: pointer; 
+            transition: all 0.2s; 
+            box-shadow: 0 2px 4px rgba(0,0,0,0.02); 
+            /* Explicit height and grid layout */
+            display: grid;
+            grid-template-rows: 1fr auto; /* Content takes space, footer is auto sized at bottom */
+            min-height: 150px; 
+            overflow: hidden;
+        }
+        .prod-card-large:hover { 
+            border-color: #2563eb; 
+            transform: translateY(-2px); 
+            box-shadow: 0 8px 15px rgba(0,0,0,0.08); 
+        }
+        
+        .card-top {
+            padding: 12px;
+            /* No bottom padding needed, grid handles separation */
+        }
+
+        .card-footer {
+            padding: 8px 12px;
+            background: white;
+            border-top: 1px solid #f3f4f6;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            /* Ensure footer has enough height */
+            min-height: 50px;
+        }
+        
+        /* Truncate long text */
+        .line-clamp-3 {
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;  
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
 
         .btn-main { background-color: #1e40af; color: white; width: 100%; padding: 12px; border-radius: 8px; font-weight: bold; cursor: pointer; text-align: center; transition: 0.2s; margin-top: auto; }
         .btn-main:hover { background-color: #1e3a8a; }
@@ -191,8 +267,8 @@
             body * { visibility: hidden; }
             #pages-container, #pages-container * { visibility: visible; }
             #pages-container { position: absolute; left: 0; top: 0; width: 100%; margin: 0; }
-            .a4-page { margin-bottom: 0; page-break-after: always; box-shadow: none; height: auto; min-height: 297mm; }
-            .a4-page:last-child { page-break-after: auto; }
+            .a4-page { margin: 0; margin-bottom: 0; page-break-after: always; page-break-inside: avoid; box-shadow: none; height: 296mm; max-height: 296mm; overflow: hidden; position: relative; }
+            .a4-page:last-child { page-break-after: avoid; margin-bottom: 0; }
             .no-print { display: none !important; }
         }
     </style>
@@ -219,6 +295,7 @@
         <select id="docTypeInput" onchange="updateUI()">
             <option value="Bon de Livraison">Bon de Livraison</option>
             <option value="Facture">Facture</option>
+            <option value="Bon d'Échantillon">BON D’ÉCHANTILLON</option>
         </select>
         
         <div class="grid grid-cols-2 gap-2">
@@ -248,13 +325,18 @@
             <i class="fa-solid fa-box-open mr-2"></i> Ouvrir le Catalogue
         </div>
 
+        <!-- DYNAMIC MANUAL ADD SECTION -->
         <label class="block text-xs font-bold text-gray-500 mb-1">Ajout Rapide / Manuel</label>
         <div class="flex gap-1 mb-1">
             <input id="mName" placeholder="Nom" class="w-2/3 text-xs">
+            <!-- Price input visible only for Normal mode -->
             <input id="mPrice" type="number" placeholder="Prix" class="w-1/3 text-xs">
         </div>
         <div class="flex gap-1">
-            <input id="mUnit" placeholder="Unité" class="w-1/3 text-xs">
+            <!-- Dynamic Unit Input: Text for Normal, Select for Echantillon -->
+            <div id="manualUnitContainer" class="w-1/3">
+                 <input id="mUnit" placeholder="Unité" class="w-full text-xs">
+            </div>
             <input id="mCondit" placeholder="Condit" class="w-1/3 text-xs">
             <button onclick="addManual()" class="w-1/3 bg-gray-200 text-gray-700 text-xs font-bold rounded hover:bg-gray-300">+</button>
         </div>
@@ -429,12 +511,12 @@
             { name: "WINGS PLT / NAT CONGELE", unit: "SAC/KG", condit: 1, price: 29.00 }
         ],
         fries: [
-            { name: "FRITE 7/7", unit: "SAC 2, 5 KG", condit: 1, price: 17.50 }
+            { name: "FRITE 7/7", unit: "SAC 2, 5 KG", condit: 1, price: 43.75 }
         ],
         ice: [
             { name: "GLACON 1 KG", unit: "SAC 1 KG", condit: 1, price: 8.00 },
-            { name: "GLACON 2 KG", unit: "SAC 2 KG", condit: 1, price: 8.00 },
-            { name: "GLACON 5 KG", unit: "SAC 5 KG", condit: 1, price: 8.00 }
+            { name: "GLACON 2 KG", unit: "SAC 2 KG", condit: 1, price: 16.00 },
+            { name: "GLACON 5 KG", unit: "SAC 5 KG", condit: 1, price: 40.00 }
         ]
     };
 
@@ -474,6 +556,9 @@
         const container = document.getElementById('catalogArea');
         container.innerHTML = '';
         
+        const docType = document.getElementById('docTypeInput').value;
+        const isEchantillon = docType === "Bon d'Échantillon";
+
         let productsToShow = [];
 
         if (currentTab === 'all') {
@@ -493,27 +578,71 @@
         productsToShow.forEach((p, index) => {
             const el = document.createElement('div');
             el.className = 'prod-card-large';
-            el.innerHTML = `
-                <div>
-                    <div class="font-bold text-gray-800 text-sm">${p.name}</div>
-                    <div class="text-xs text-gray-500 mt-1">
-                        <span class="bg-gray-100 px-2 py-1 rounded">
-                            <i class="fa-solid fa-box"></i> ${p.unit} (x${p.condit})
+            
+            // Build footer based on mode
+            let footerHTML = '';
+            let topContent = '';
+
+            if (isEchantillon) {
+                // ECHANTILLON MODE: Only Name in Top. Dropdown in Footer.
+                topContent = `<div class="font-bold text-gray-800 text-sm leading-snug mb-1 line-clamp-3" title="${p.name}">${p.name}</div>`;
+                
+                footerHTML = `
+                    <div class="card-footer flex-col gap-2 !h-auto !py-2">
+                        <select id="unit-${index}-${currentTab}" class="w-full text-xs p-1 border rounded bg-white outline-none text-gray-700 font-medium h-8 cursor-pointer" onclick="event.stopPropagation()">
+                            <option value="" disabled selected>Choisir Unité</option>
+                            <option value="Pièces">Pièces</option>
+                            <option value="Sac">Sac</option>
+                            <option value="Carton">Carton</option>
+                            <option value="Unité">Unité</option>
+                        </select>
+                        
+                        <div class="flex items-center gap-1 w-full justify-end">
+                            <input type="number" id="qty-${index}-${currentTab}" value="1" min="1" step="1" 
+                                class="w-12 h-8 text-center border rounded text-sm font-bold bg-gray-50 outline-none focus:border-blue-500" 
+                                onclick="event.stopPropagation()">
+                            <button class="bg-blue-600 text-white h-8 px-3 rounded text-xs font-bold hover:bg-blue-700 flex items-center gap-1 transition-colors shadow-sm"
+                                onclick="event.stopPropagation(); addItemFromCard(this, '${index}-${currentTab}')">
+                                <i class="fa-solid fa-plus"></i> Ajouter
+                            </button>
+                        </div>
+                    </div>
+                `;
+            } else {
+                // NORMAL MODE: Name + Unit in Top. Price in Footer.
+                topContent = `
+                    <div class="font-bold text-gray-800 text-sm leading-snug mb-1 line-clamp-3" title="${p.name}">${p.name}</div>
+                    <div class="text-xs text-gray-500">
+                        <span class="bg-gray-100 px-1.5 py-0.5 rounded border border-gray-200 whitespace-nowrap">
+                            ${p.unit} (x${p.condit})
                         </span>
                     </div>
-                </div>
-                <div class="flex justify-between items-end mt-2">
-                    <div class="text-blue-700 font-bold text-lg">${p.price.toFixed(2)} <span class="text-xs font-normal">DH</span></div>
-                    
-                    <div class="flex items-center gap-1">
-                        <input type="number" id="qty-${index}-${currentTab}" value="1" min="1" step="1" 
-                            class="w-12 p-1 text-center border rounded text-sm" onclick="event.stopPropagation()">
-                        <button class="bg-blue-50 text-blue-700 px-3 py-1 rounded text-sm hover:bg-blue-100 font-bold border border-blue-200"
-                            onclick="event.stopPropagation(); addItemFromCard(this, '${index}-${currentTab}')">+ Ajouter</button>
+                `;
+                
+                footerHTML = `
+                    <div class="card-footer">
+                        <div class="text-blue-700 font-extrabold text-sm whitespace-nowrap">${p.price.toFixed(2)} DHS</div>
+                        
+                        <div class="flex items-center gap-1">
+                            <input type="number" id="qty-${index}-${currentTab}" value="1" min="1" step="1" 
+                                class="w-10 h-8 text-center border rounded text-sm font-bold bg-gray-50 outline-none focus:border-blue-500" 
+                                onclick="event.stopPropagation()">
+                            <button class="bg-blue-600 text-white h-8 px-2 rounded text-xs font-bold hover:bg-blue-700 flex items-center gap-1 transition-colors shadow-sm"
+                                onclick="event.stopPropagation(); addItemFromCard(this, '${index}-${currentTab}')">
+                                <i class="fa-solid fa-plus"></i> Ajouter
+                            </button>
+                        </div>
                     </div>
+                `;
+            }
+
+            el.innerHTML = `
+                <div class="card-top">
+                    ${topContent}
                 </div>
+                ${footerHTML}
             `;
-            // Store product data on button for easy access
+            // Store product data on button
             const btn = el.querySelector('button');
             btn.productData = p;
             
@@ -538,13 +667,37 @@
         const qtyInput = document.getElementById(`qty-${idSuffix}`);
         const qty = parseFloat(qtyInput.value) || 1;
         
-        addItem(p, qty);
+        // Check for custom unit (Echantillon mode)
+        let customUnit = null;
+        const unitSelect = document.getElementById(`unit-${idSuffix}`);
+        if(unitSelect) {
+            customUnit = unitSelect.value;
+            if(!customUnit) {
+                alert("Veuillez choisir une unité (Pièces, Sac, Carton, etc.)");
+                return; // Stop if no unit selected
+            }
+        }
+        
+        addItem(p, qty, customUnit);
     }
 
-    function addItem(p, qty = 1) {
-        const exists = items.find(i => i.name === p.name);
-        if(exists) exists.qty += qty;
-        else items.push({...p, qty: qty});
+    function addItem(p, qty = 1, customUnit = null) {
+        // If customUnit is provided (Echantillon mode), we treat it as a separate item or update that specific one
+        
+        let itemToAdd = { ...p, qty: qty };
+        if(customUnit) {
+            itemToAdd.unit = customUnit; // Override unit
+            itemToAdd.price = 0; // Ensure 0 price for sample
+        }
+
+        // Logic: if same item AND same unit exists, update qty
+        const existing = items.find(i => i.name === itemToAdd.name && i.unit === itemToAdd.unit);
+        
+        if(existing) {
+            existing.qty += qty;
+        } else {
+            items.push(itemToAdd);
+        }
         
         showToast(`${qty}x ${p.name} ajouté !`);
         renderInvoice();
@@ -552,14 +705,29 @@
 
     function addManual() {
         const name = document.getElementById('mName').value;
-        const price = parseFloat(document.getElementById('mPrice').value);
-        const unit = document.getElementById('mUnit').value || "U";
-        const condit = parseFloat(document.getElementById('mCondit').value) || 1;
+        const docType = document.getElementById('docTypeInput').value;
+        const isEchantillon = docType === "Bon d'Échantillon";
+        
+        let price = 0;
+        let unit = "U";
+        let condit = 1;
 
-        if(name && price) {
-            addItem({name, price, unit, condit});
+        if(isEchantillon) {
+             // In Echantillon mode, price is always 0. Unit comes from dropdown (we need to read manual unit)
+             // For manual add in Echantillon, we repurposed mPrice for Unit input in the UI logic below
+             const unitSelect = document.getElementById('mUnitSelect');
+             if(unitSelect) unit = unitSelect.value;
+             if(!unit && isEchantillon) unit = "Pièces"; // Default
+        } else {
+             price = parseFloat(document.getElementById('mPrice').value);
+             unit = document.getElementById('mUnit').value || "U";
+             condit = parseFloat(document.getElementById('mCondit').value) || 1;
+        }
+        
+        if(name) {
+            addItem({name, price, unit, condit}, 1); 
             document.getElementById('mName').value = '';
-            document.getElementById('mPrice').value = '';
+            if(!isEchantillon) document.getElementById('mPrice').value = '';
         }
     }
 
@@ -573,9 +741,7 @@
         const modal = document.getElementById('productModal');
         if(show) {
             modal.classList.add('open');
-            // Reset to 'All' tab when opening to show everything
-            // Optional: Remove if you want to keep state
-            // setTab('all', document.querySelector('.tab')); 
+            renderCatalog(); // Re-render to check mode (Echantillon vs Normal)
         }
         else modal.classList.remove('open');
     }
@@ -591,8 +757,9 @@
         container.innerHTML = ''; // Clear pages
 
         // Gather Inputs
+        const docType = document.getElementById('docTypeInput').value;
         const inputs = {
-            docType: document.getElementById('docTypeInput').value,
+            docType: docType,
             date: formatDate(document.getElementById('dateInput').value),
             docNum: document.getElementById('docNumInput').value,
             ref: document.getElementById('refInput').value || "-",
@@ -604,9 +771,12 @@
             savedLogo: localStorage.getItem('horeca_logo')
         };
 
+        const isEchantillon = (docType === "Bon d'Échantillon");
+
         // Logic variables
         let total = 0;
         let cartonCount = 0;
+        let totalUnitsCount = 0; // For Echantillon total units
         
         // Calculate Totals first
         items.forEach(i => {
@@ -614,8 +784,9 @@
             const linePrice = totU * i.price;
             total += linePrice;
             
+            totalUnitsCount += totU; // Sum all individual units
+
             // IMPROVED LOGIC FOR COUNTING CARTONS
-            // Check if unit is Carton OR if condit > 1 (implies a pack/carton)
             const unitUpper = i.unit.toUpperCase();
             if(unitUpper.includes('CARTON') || unitUpper.includes('CARTOON') || (unitUpper === 'CTN') || (unitUpper === 'C/40') || (i.condit > 1 && unitUpper !== 'KG' && unitUpper !== 'L')) {
                 cartonCount += i.qty;
@@ -638,11 +809,11 @@
         // Render Pages
         chunks.forEach((chunk, index) => {
             const isLast = index === chunks.length - 1;
-            const pageHTML = buildPageHTML(chunk, index, chunks.length, isLast, inputs, total, cartonCount);
+            const pageHTML = buildPageHTML(chunk, index, chunks.length, isLast, inputs, total, cartonCount, totalUnitsCount, isEchantillon);
             container.insertAdjacentHTML('beforeend', pageHTML);
         });
 
-        // Re-attach logo if available (need to update src of img tags that were just created)
+        // Re-attach logo
         if(inputs.savedLogo) {
             document.querySelectorAll('.page-logo').forEach(img => {
                 img.src = inputs.savedLogo;
@@ -651,65 +822,147 @@
         }
     }
 
-    function buildPageHTML(chunk, pageIdx, totalPages, isLast, inputs, grandTotal, cartonCount) {
+    function buildPageHTML(chunk, pageIdx, totalPages, isLast, inputs, grandTotal, cartonCount, totalUnitsCount, isEchantillon) {
         let rowsHTML = '';
         
         // Render Rows
         chunk.forEach((item, chunkIdx) => {
-            // We need absolute index to callback updateQty correctly
             const absIdx = (pageIdx * ITEMS_PER_PAGE) + chunkIdx;
             
-            rowsHTML += `
-                <tr class="row-stripe">
-                    <td class="col-art">${item.name}</td>
-                    <td>${item.unit}</td>
-                    <td style="padding:0">
-                        <input type="number" class="w-12 text-center bg-transparent font-bold text-blue-700" 
-                        value="${item.qty}" onchange="updateQty(${absIdx}, this.value)">
-                    </td>
-                    <td>${item.condit}</td>
-                    <td>${item.totU}</td>
-                    <td>${item.price.toFixed(2)}</td>
-                    <td class="font-bold">${item.lineTotal.toFixed(2)}</td>
-                    <td class="no-print text-red-500 cursor-pointer" onclick="updateQty(${absIdx}, 0)"><i class="fa-solid fa-trash"></i></td>
-                </tr>
-            `;
+            if (isEchantillon) {
+                // ECHANTILLON ROW: Simplified
+                rowsHTML += `
+                    <tr class="row-stripe">
+                        <td class="col-art">${item.name}</td>
+                        <td>${item.unit}</td>
+                        <td style="padding:0">
+                            <input type="number" class="w-12 text-center bg-transparent font-bold text-blue-700" 
+                            value="${item.qty}" onchange="updateQty(${absIdx}, this.value)">
+                        </td>
+                        <td class="no-print text-red-500 cursor-pointer" onclick="updateQty(${absIdx}, 0)"><i class="fa-solid fa-trash"></i></td>
+                    </tr>
+                `;
+            } else {
+                // NORMAL ROW
+                rowsHTML += `
+                    <tr class="row-stripe">
+                        <td class="col-art">${item.name}</td>
+                        <td>${item.unit}</td>
+                        <td style="padding:0">
+                            <input type="number" class="w-12 text-center bg-transparent font-bold text-blue-700" 
+                            value="${item.qty}" onchange="updateQty(${absIdx}, this.value)">
+                        </td>
+                        <td>${item.condit}</td>
+                        <td>${item.totU}</td>
+                        <td>${item.price.toFixed(2)}</td>
+                        <td class="font-bold">${item.lineTotal.toFixed(2)}</td>
+                        <td class="no-print text-red-500 cursor-pointer" onclick="updateQty(${absIdx}, 0)"><i class="fa-solid fa-trash"></i></td>
+                    </tr>
+                `;
+            }
         });
 
-        // Fill empty rows if last page to keep layout
-        if (isLast && chunk.length < ITEMS_PER_PAGE) {
-             for(let i=chunk.length; i < ITEMS_PER_PAGE; i++) {
-                 rowsHTML += `<tr><td style="height:32px"></td><td></td><td></td><td></td><td></td><td></td><td class="no-print"></td></tr>`;
-             }
+        // Fill empty rows - ONLY if user wants rows to bottom. 
+        // User asked: "rows should only appears when we add a product". 
+        // So we remove the loop that adds empty spacer rows.
+        
+        // Header Logic
+        let headerColsHTML = '';
+        if (isEchantillon) {
+            headerColsHTML = `
+                <th class="col-art">Désignation</th>
+                <th width="15%">Unité</th>
+                <th width="15%">Qté</th>
+                <th width="5%" class="no-print"></th>
+            `;
+        } else {
+            headerColsHTML = `
+                <th class="col-art">Désignation</th>
+                <th width="8%">Unité</th>
+                <th width="8%">Qté</th>
+                <th width="8%">Condit</th>
+                <th width="10%">Total U</th>
+                <th width="12%">P.U (DH)</th>
+                <th width="15%">Total (DH)</th>
+                <th width="5%" class="no-print"></th>
+            `;
         }
 
-        // Footer Logic
-        let footerHTML = '';
-        if (isLast) {
-            const words = numberToFrench(grandTotal);
-            const wordStr = words.charAt(0).toUpperCase() + words.slice(1);
-            
-            footerHTML = `
-                <div class="footer-area">
-                    <div class="amount-text">
-                        <div class="text-sm font-bold text-gray-600 border-b pb-1 mb-1 uppercase">Montant de Facture en lettre:</div>
-                        <div class="amount-words">${wordStr}</div>
-                    </div>
-                    <div class="total-box">
-                        <div class="total-row final">
-                            <span class="total-label">NET À PAYER</span>
-                            <span><span class="text-xl">${grandTotal.toLocaleString('fr-MA', {minimumFractionDigits: 2})}</span> DH</span>
-                        </div>
-                    </div>
+        // Info Bar Logic
+        let infoBarHTML = '';
+        if (isEchantillon) {
+            // Hide NB UNITES for Echantillon per request
+            infoBarHTML = `
+                <div class="info-cell">
+                    <div class="info-header">Date</div>
+                    <div class="info-value">${inputs.date}</div>
+                </div>
+                <div class="info-cell">
+                    <div class="info-header">N° BE</div>
+                    <div class="info-value">${inputs.docNum}</div>
+                </div>
+                <div class="info-cell">
+                    <div class="info-header">Référence</div>
+                    <div class="info-value">${inputs.ref}</div>
                 </div>
             `;
         } else {
-            footerHTML = `<div class="page-break-text">... Suite page suivante ...</div>`;
+            const dynamicLabel = inputs.docType === 'Facture' ? "Mode Paiement" : "NB UNITÉS";
+            const dynamicVal = inputs.docType === 'Facture' ? inputs.payment : cartonCount;
+            const dateLabel = inputs.docType === 'Facture' ? "Date Facturation" : "Date Livraison";
+            const numLabel = inputs.docType === 'Facture' ? "N° Facture" : "N° BL";
+
+            infoBarHTML = `
+                <div class="info-cell">
+                    <div class="info-header">${dateLabel}</div>
+                    <div class="info-value">${inputs.date}</div>
+                </div>
+                <div class="info-cell">
+                    <div class="info-header">${numLabel}</div>
+                    <div class="info-value">${inputs.docNum}</div>
+                </div>
+                <div class="info-cell">
+                    <div class="info-header">${dynamicLabel}</div>
+                    <div class="info-value">${dynamicVal}</div>
+                </div>
+                <div class="info-cell">
+                    <div class="info-header">Référence</div>
+                    <div class="info-value">${inputs.ref}</div>
+                </div>
+            `;
         }
 
-        // Dynamic Field in Header
-        const dynamicLabel = inputs.docType === 'Facture' ? "Mode Paiement" : "NB UNITÉS";
-        const dynamicVal = inputs.docType === 'Facture' ? inputs.payment : cartonCount;
+        // Footer Logic (Total only for non-Echantillon)
+        let footerHTML = '';
+        if (isLast) {
+            if (!isEchantillon) {
+                const words = numberToFrench(grandTotal);
+                const wordStr = words.charAt(0).toUpperCase() + words.slice(1);
+                
+                footerHTML = `
+                    <div class="footer-area">
+                        <div class="amount-text">
+                            <div class="text-sm font-bold text-gray-600 border-b pb-1 mb-1 uppercase">Montant de Facture en lettre:</div>
+                            <div class="amount-words">${wordStr}</div>
+                        </div>
+                        <div class="total-box">
+                            <div class="total-row final">
+                                <span class="total-label">NET À PAYER</span>
+                                <div class="total-value-group">
+                                    <span class="total-value-main">${grandTotal.toLocaleString('fr-MA', {minimumFractionDigits: 2})}</span>
+                                    <span class="total-currency">DH</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            } else {
+                // Echantillon footer spacer
+                footerHTML = `<div style="height: 50px;"></div>`;
+            }
+        } else {
+            footerHTML = `<div class="page-break-text">... Suite page suivante ...</div>`;
+        }
 
         return `
         <div class="a4-page">
@@ -726,7 +979,7 @@
                     </div>
                 </div>
                 <div class="client-box">
-                    <div class="client-label">Facturer à:</div>
+                    <div class="client-label">Destinataire:</div>
                     <div class="font-bold text-lg text-blue-900 mb-1">${inputs.cName}</div>
                     <div class="text-sm text-gray-600 mb-2 whitespace-pre-line" style="word-break: break-word;">${inputs.cAddr}</div>
                     <div class="text-sm font-bold">ICE: ${inputs.cIce}</div>
@@ -739,35 +992,13 @@
             </div>
 
             <div class="info-bar">
-                <div class="info-cell">
-                    <div class="info-header">${inputs.docType === 'Facture' ? "Date Facturation" : "Date Livraison"}</div>
-                    <div class="info-value">${inputs.date}</div>
-                </div>
-                <div class="info-cell">
-                    <div class="info-header">${inputs.docType === 'Facture' ? "N° Facture" : "N° BL"}</div>
-                    <div class="info-value">${inputs.docNum}</div>
-                </div>
-                <div class="info-cell">
-                    <div class="info-header">${dynamicLabel}</div>
-                    <div class="info-value">${dynamicVal}</div>
-                </div>
-                <div class="info-cell">
-                    <div class="info-header">Référence</div>
-                    <div class="info-value">${inputs.ref}</div>
-                </div>
+                ${infoBarHTML}
             </div>
 
             <table class="main-table">
                 <thead>
                     <tr>
-                        <th class="col-art">Désignation</th>
-                        <th width="8%">Unité</th>
-                        <th width="8%">Qté</th>
-                        <th width="8%">Condit</th>
-                        <th width="10%">Total U</th>
-                        <th width="12%">P.U (DH)</th>
-                        <th width="15%">Total (DH)</th>
-                        <th width="5%" class="no-print"></th>
+                        ${headerColsHTML}
                     </tr>
                 </thead>
                 <tbody>
@@ -800,7 +1031,33 @@
     function updateUI() {
         const type = document.getElementById('docTypeInput').value;
         const isFacture = type === 'Facture';
+        const isEchantillon = type === "Bon d'Échantillon";
+        
         document.getElementById('paymentInput').classList.toggle('hidden', !isFacture);
+        
+        // Toggle Manual Add Inputs for Echantillon
+        const manualUnitDiv = document.getElementById('manualUnitContainer');
+        const mPriceInput = document.getElementById('mPrice');
+        const mConditInput = document.getElementById('mCondit');
+        
+        if(isEchantillon) {
+            // Hide Price & Condit for Echantillon Manual Add
+            mPriceInput.classList.add('hidden');
+            mConditInput.classList.add('hidden');
+            // Swap Text Unit for Select Unit
+            manualUnitDiv.innerHTML = `
+                <select id="mUnitSelect" class="w-full text-xs p-1 border rounded bg-white outline-none h-[42px]">
+                    <option value="Pièces">Pièces</option>
+                    <option value="Sac">Sac</option>
+                    <option value="Carton">Carton</option>
+                    <option value="Unité">Unité</option>
+                </select>`;
+        } else {
+            mPriceInput.classList.remove('hidden');
+            mConditInput.classList.remove('hidden');
+            manualUnitDiv.innerHTML = `<input id="mUnit" placeholder="Unité" class="w-full text-xs">`;
+        }
+
         renderInvoice();
     }
 
@@ -825,7 +1082,9 @@
             filename: `${document.getElementById('docTypeInput').value}_${document.getElementById('clientName').value}.pdf`,
             image: { type: 'jpeg', quality: 0.98 },
             html2canvas: { scale: 2 },
-            jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+            jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
+            // Add custom pagebreak settings to prevent extra page
+            pagebreak: { mode: ['avoid-all', 'css', 'legacy'] }
         };
         document.querySelectorAll('.no-print').forEach(el => el.style.display = 'none');
         html2pdf().set(opt).from(element).save().then(() => {
